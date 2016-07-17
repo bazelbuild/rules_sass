@@ -129,7 +129,7 @@ cc_binary(
 def sass_repositories():
   native.new_http_archive(
       name = "libsass",
-      url = "https://github.com/sass/libsass/archive/3.3.0-beta1.tar.gz",
+      url = "http://bazel-mirror.storage.googleapis.com/github.com/sass/libsass/archive/3.3.0-beta1.tar.gz",
       sha256 = "6a4da39cc0b585f7a6ee660dc522916f0f417c890c3c0ac7ebbf6a85a16d220f",
       build_file_content = LIBSASS_BUILD_FILE,
       strip_prefix = "libsass-3.3.0-beta1",
@@ -137,7 +137,7 @@ def sass_repositories():
 
   native.new_http_archive(
       name = "sassc",
-      url = "https://github.com/sass/sassc/archive/3.3.0-beta1.tar.gz",
+      url = "http://bazel-mirror.storage.googleapis.com/github.com/sass/sassc/archive/3.3.0-beta1.tar.gz",
       sha256 = "87494218eea2441a7a24b40f227330877dbba75c5fa9014ac6188711baed53f6",
       build_file_content = SASSC_BUILD_FILE,
       strip_prefix = "sassc-3.3.0-beta1",
