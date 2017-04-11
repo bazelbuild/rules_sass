@@ -42,7 +42,7 @@ def _sass_binary_impl(ctx):
     # Load up all the transitive sources as dependent includes.
     transitive_sources = collect_transitive_sources(ctx)
     for src in transitive_sources:
-        options += ["-I={0}".format(src)]
+        options += ["--load-path", src.path[:-len(src.basename)]]
 
     ctx.action(
         inputs = [sassc, ctx.file.src] + list(transitive_sources),
