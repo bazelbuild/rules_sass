@@ -18,7 +18,7 @@ SASS_FILETYPES = FileType([
 ])
 
 def collect_transitive_sources(ctx):
-    source_files = set(order="compile")
+    source_files = depset(order="postorder")
     for dep in ctx.attr.deps:
         source_files += dep.transitive_sass_files
     return source_files
@@ -27,7 +27,7 @@ def _sass_library_impl(ctx):
     transitive_sources = collect_transitive_sources(ctx)
     transitive_sources += SASS_FILETYPES.filter(ctx.files.srcs)
     return struct(
-        files = set(),
+        files = depset(),
         transitive_sass_files = transitive_sources)
 
 def _sass_binary_impl(ctx):
