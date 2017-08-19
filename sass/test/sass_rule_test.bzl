@@ -35,6 +35,7 @@ load(
 def _sass_binary_test(package):
     rule_test(
         name = "hello_world_rule_test",
+        size = "small",
         generates = ["hello_world.css", "hello_world.css.map"],
         rule = package + "/hello_world:hello_world",
     )
