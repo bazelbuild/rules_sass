@@ -133,7 +133,7 @@ cc_binary(
         "//conditions:default": [],
     }),
     linkopts = select({
-        "@bazel_tools//src/conditions:windows": [],
+        "@bazel_tools//src/conditions:windows": ["-DEFAULTLIB:shell32.lib"],
         "//conditions:default": [
             "-ldl",
             "-lm",
