@@ -121,8 +121,24 @@ cc_binary(
         "@libsass//:srcs",
         "sassc.c",
         "sassc_version.h",
-],
-    linkopts = ["-ldl", "-lm"],
+    ] + select({
+        "@bazel_tools//src/conditions:windows": glob([
+            "win/**/*.c",
+            "win/**/*.h",
+        ]),
+        "//conditions:default": [],
+    }),
+    includes = select({
+        "@bazel_tools//src/conditions:windows": ["win/posix"],
+        "//conditions:default": [],
+    }),
+    linkopts = select({
+        "@bazel_tools//src/conditions:windows": [],
+        "//conditions:default": [
+            "-ldl",
+            "-lm",
+        ],
+    }),
     deps = ["@libsass//:headers"],
 )
 """
