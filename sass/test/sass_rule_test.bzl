@@ -40,7 +40,7 @@ def _sass_binary_test(package):
     )
 
 
-def _multi_sass_binary(package):
+def _multi_sass_binary_test(package):
     rule_test(
         name = "multi_sass_binary_rule_test",
         generates = [
@@ -56,4 +56,4 @@ def _multi_sass_binary(package):
 def sass_rule_test(package):
     """Issue simple tests on sass rules."""
     _sass_binary_test(package)
-    _multi_sass_binary(package)
+    _multi_sass_binary_test(package)
