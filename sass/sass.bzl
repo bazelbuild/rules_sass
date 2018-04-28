@@ -44,13 +44,29 @@ def _sass_binary_impl(ctx):
     for src in transitive_sources:
         options += ["--load-path", src.path[:-len(src.basename)]]
 
+    if ctx.outputs.out:
+        outfile = ctx.outputs.out
+        outfile_map = ctx.actions.declare_file(
+            outfile.basename + ".map",
+            sibling=outfile
+        )
+    else:
+        outfile = ctx.actions.declare_file(
+            ctx.label.name + ".css"
+        )
+        outfile_map = ctx.actions.declare_file(
+            ctx.label.name + ".css.map"
+        )
+
     ctx.action(
         inputs = [sassc, ctx.file.src] + list(transitive_sources),
         executable = sassc,
-        arguments = options + [ctx.file.src.path, ctx.outputs.css_file.path],
+        arguments = options + [ctx.file.src.path, outfile.path],
         mnemonic = "SassCompiler",
-        outputs = [ctx.outputs.css_file, ctx.outputs.css_map_file],
+        outputs = [outfile, outfile_map],
     )
+
+    return DefaultInfo(files=depset([outfile, outfile_map]))
 
 
 def _multi_sass_binary_impl(ctx):
@@ -112,6 +128,7 @@ sass_binary = rule(
             mandatory = True,
             single_file = True,
         ),
+        "out": attr.output(),
         "output_style": attr.string(default = "compressed"),
         "deps": sass_deps_attr,
         "_sassc": attr.label(
@@ -120,10 +137,6 @@ sass_binary = rule(
             cfg = "host",
             single_file = True,
         ),
-    },
-    outputs = {
-        "css_file": "%{name}.css",
-        "css_map_file": "%{name}.css.map",
     },
     implementation = _sass_binary_impl,
 )

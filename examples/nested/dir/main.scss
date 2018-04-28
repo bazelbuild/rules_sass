@@ -1,0 +1,13 @@
+@import 'examples/shared/fonts';
+@import 'examples/shared/colors';
+
+html {
+  body {
+    font-family: $default-font-stack;
+
+    h1 {
+      color: $example-red;
+      font-family: $modern-font-stack;
+    }
+  }
+}

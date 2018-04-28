@@ -187,7 +187,7 @@ Used to generate a CSS artifact from a given `src` sass file.
         <p>A unique name for this rule.</p>
         <p>
           This name will also be used as the name of the generated CSS and source map file of
-          this rule.
+          this rule unless the <code>out</code> property is used.
         </p>
       </td>
     </tr>
@@ -196,6 +196,16 @@ Used to generate a CSS artifact from a given `src` sass file.
       <td>
         <code>Main source file, required</code>
         <p>The primary Sass source file that will be compiled to CSS.</p>
+        <p>
+        <code>sass_binary</code> assumes a 1:1 mapping of src to output CSS file (and source map).
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td><code>out</code></td>
+      <td>
+        <code>Output file to be produced, optional</code>
+        <p>The resulting CSS file that does not need to exist in the same directory as the BUILD file.</p>
         <p>
         <code>sass_binary</code> assumes a 1:1 mapping of src to output CSS file (and source map).
         </p>
