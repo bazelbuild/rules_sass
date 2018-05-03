@@ -1,4 +1,4 @@
-# Copyright 2015 The Bazel Authors. All rights reserved.
+# Copyright 2018 The Bazel Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,151 +11,114 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"Compile Sass files to CSS"
 
-SASS_FILETYPES = FileType([
-    ".sass",
-    ".scss",
-])
+_FILETYPES = [".sass", ".scss", ".svg", ".png", ".gif"]
 
-def collect_transitive_sources(ctx):
-    source_files = depset(order="postorder")
-    for dep in ctx.attr.deps:
-        source_files += dep.transitive_sass_files
-    return source_files
+SassInfo = provider("transitive_sources")
+
+def collect_transitive_sources(srcs, deps):
+    return depset(
+        srcs,
+        transitive=[dep[SassInfo].transitive_sources for dep in deps],
+        order="postorder")
 
 def _sass_library_impl(ctx):
-    transitive_sources = collect_transitive_sources(ctx)
-    transitive_sources += SASS_FILETYPES.filter(ctx.files.srcs)
-    return struct(
-        files = depset(),
-        transitive_sass_files = transitive_sources)
+    transitive_sources = collect_transitive_sources(
+        ctx.files.srcs, ctx.attr.deps)
+    return [SassInfo(transitive_sources=transitive_sources)]
 
 def _sass_binary_impl(ctx):
-    # Reference the sass compiler and define the default options
-    # that sass_binary uses.
-    sassc = ctx.file._sassc
-    options = [
-        "--style={0}".format(ctx.attr.output_style),
-        "--sourcemap",
-    ]
+    args = ctx.actions.args()
+    args.add(["--style", ctx.attr.output_style], join_with="=")
+    for prefix in [".", ctx.var['BINDIR'], ctx.var['GENDIR']]:
+      args.add("--load-path=%s/" % prefix)
+      for include_path in ctx.attr.include_paths:
+        args.add("--load-path=%s/%s" % (prefix, include_path))
+    args.add([ctx.file.src.path, ctx.outputs.css_file.path])
 
-    # Load up all the transitive sources as dependent includes.
-    transitive_sources = collect_transitive_sources(ctx)
-    for src in transitive_sources:
-        options += ["--load-path", src.path[:-len(src.basename)]]
-
-    ctx.action(
-        inputs = [sassc, ctx.file.src] + list(transitive_sources),
-        executable = sassc,
-        arguments = options + [ctx.file.src.path, ctx.outputs.css_file.path],
+    ctx.actions.run(
         mnemonic = "SassCompiler",
-        outputs = [ctx.outputs.css_file, ctx.outputs.css_map_file],
+        executable = ctx.executable._binary,
+        inputs = [ctx.executable._binary] +
+            list(collect_transitive_sources([ctx.file.src], ctx.attr.deps)),
+        arguments = [args],
+        outputs = [ctx.outputs.css_file, ctx.outputs.map_file],
     )
 
+    # Make sure the output CSS is available in runfiles if used as a data dep.
+    return DefaultInfo(
+        runfiles = ctx.runfiles(
+            files = [
+                ctx.outputs.css_file,
+                ctx.outputs.map_file,
+            ]))
+
+def _sass_binary_outputs(output_name, output_dir):
+  output_name = output_name or "%{name}.css"
+  css_file = ("%s/%s" % (output_dir, output_name) if output_dir
+              else output_name)
+  outputs = {
+      "css_file": css_file,
+      "map_file": "%s.map" % css_file,
+  }
+
+  return outputs
+
 sass_deps_attr = attr.label_list(
-    providers = ["transitive_sass_files"],
+    doc = "sass_library targets to include in the compilation",
+    providers = [SassInfo],
     allow_files = False,
 )
 
 sass_library = rule(
+    implementation = _sass_library_impl,
     attrs = {
         "srcs": attr.label_list(
-            allow_files = SASS_FILETYPES,
+            doc = "Sass source files",
+            allow_files = _FILETYPES,
             non_empty = True,
             mandatory = True,
         ),
         "deps": sass_deps_attr,
     },
-    implementation = _sass_library_impl,
 )
+"""Defines a group of Sass include files.
+"""
+
+_sass_binary_attrs = {
+    "src": attr.label(
+        doc = "Sass source files",
+        allow_files = _FILETYPES,
+        mandatory = True,
+        single_file = True,
+    ),
+    "include_paths": attr.string_list(
+        doc = "Additional directories to search when resolving imports"),
+    "output_dir": attr.string(
+        doc = "Output directory, relative to xxx",
+        default = ""),
+    "output_name": attr.string(
+        doc = "Name of the output file, if not specified it is xxx",
+        default = ""),
+    "output_style": attr.string(
+        doc = "How to style the compiled CSS",
+        default = "compressed",
+        values = [
+            "expanded",
+            "compressed",
+        ],
+    ),
+    "deps": sass_deps_attr,
+    "_binary": attr.label(
+        default = Label("//sass"),
+        executable = True,
+        cfg = "host",
+    ),
+}
 
 sass_binary = rule(
-    attrs = {
-        "src": attr.label(
-            allow_files = SASS_FILETYPES,
-            mandatory = True,
-            single_file = True,
-        ),
-        "output_style": attr.string(default = "compressed"),
-        "deps": sass_deps_attr,
-        "_sassc": attr.label(
-            default = Label("//sass:sassc"),
-            executable = True,
-            cfg = "host",
-            single_file = True,
-        ),
-    },
-    outputs = {
-        "css_file": "%{name}.css",
-        "css_map_file": "%{name}.css.map",
-    },
     implementation = _sass_binary_impl,
+    attrs = _sass_binary_attrs,
+    outputs = _sass_binary_outputs,
 )
-
-LIBSASS_BUILD_FILE = """
-package(default_visibility = ["@sassc//:__pkg__"])
-
-filegroup(
-    name = "srcs",
-    srcs = glob([
-         "src/**/*.h*",
-         "src/**/*.c*",
-    ]),
-)
-
-# Includes directive may seem unnecessary here, but its needed for the weird
-# interplay between libsass/sassc projects. This is intentional.
-cc_library(
-    name = "headers",
-    includes = ["include"],
-    hdrs = glob(["include/**/*.h"]),
-)
-"""
-
-SASSC_BUILD_FILE = """
-package(default_visibility = ["//visibility:public"])
-
-cc_binary(
-    name = "sassc",
-    srcs = [
-        "@libsass//:srcs",
-        "sassc.c",
-        "sassc_version.h",
-    ] + select({
-        "@bazel_tools//src/conditions:windows": glob([
-            "win/**/*.c",
-            "win/**/*.h",
-        ]),
-        "//conditions:default": [],
-    }),
-    includes = select({
-        "@bazel_tools//src/conditions:windows": ["win/posix"],
-        "//conditions:default": [],
-    }),
-    linkopts = select({
-        "@bazel_tools//src/conditions:windows": ["-DEFAULTLIB:shell32.lib"],
-        "//conditions:default": [
-            "-ldl",
-            "-lm",
-        ],
-    }),
-    deps = ["@libsass//:headers"],
-)
-"""
-
-def sass_repositories():
-  native.new_http_archive(
-      name = "libsass",
-      url = "http://bazel-mirror.storage.googleapis.com/github.com/sass/libsass/archive/3.3.0-beta1.tar.gz",
-      sha256 = "6a4da39cc0b585f7a6ee660dc522916f0f417c890c3c0ac7ebbf6a85a16d220f",
-      build_file_content = LIBSASS_BUILD_FILE,
-      strip_prefix = "libsass-3.3.0-beta1",
-  )
-
-  native.new_http_archive(
-      name = "sassc",
-      url = "http://bazel-mirror.storage.googleapis.com/github.com/sass/sassc/archive/3.3.0-beta1.tar.gz",
-      sha256 = "87494218eea2441a7a24b40f227330877dbba75c5fa9014ac6188711baed53f6",
-      build_file_content = SASSC_BUILD_FILE,
-      strip_prefix = "sassc-3.3.0-beta1",
-  )
