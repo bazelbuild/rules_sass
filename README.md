@@ -21,14 +21,22 @@ To  use the Sass rules, add the following to your `WORKSPACE` file to add the
 external repositories for Sass:
 
 ```python
-git_repository(
-    name = "io_bazel_rules_sass",
-    remote = "https://github.com/bazelbuild/rules_sass.git",
-    tag = "0.0.3",
+http_archive(
+    name = "build_bazel_rules_nodejs",
+    url = "https://github.com/bazelbuild/rules_nodejs/archive/0.8.0.zip",
+    strip_prefix = "rules_nodejs-0.8.0",
+    sha256 = "4e40dd49ae7668d245c3107645f2a138660fcfd975b9310b91eda13f0c973953",
 )
+load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories")
+node_repositories(package_json = [])
 
-load("@io_bazel_rules_sass//sass:sass.bzl", "sass_repositories")
-
+http_archive(
+    name = "io_bazel_rules_sass",
+    url = "https://github.com/bazelbuild/rules_sass/archive/0.0.3.zip",
+    strip_prefix = "rules_sass-0.0.3",
+    sha256 = "8fa98e7b48a5837c286a1ea254b5a5c592fced819ee9fe4fdd759768d97be868",
+)
+load("@io_bazel_rules_sass//sass:sass_repositories.bzl", "sass_repositories")
 sass_repositories()
 ```
 

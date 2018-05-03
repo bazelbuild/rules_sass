@@ -7,3 +7,16 @@ nodejs_binary(
     node_modules = "@build_bazel_rules_sass_compiletime_deps//:node_modules",
     entry_point = "sass/sass.js",
 )
+
+load("@io_bazel_skydoc//skylark:skylark.bzl", "skylark_doc")
+
+skylark_doc(
+    name = "docs",
+    srcs = [
+        ":sass.bzl",
+        ":sass_repositories.bzl",
+    ],
+    format = "html",
+    site_root = "/rules_sass",
+    #strip_prefix = "/",
+)
