@@ -2,6 +2,6 @@
 # yarn lockfile v1
 
 
-sass@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.3.1.tgz#432a6a455e0bb50fd8f2364b9d5257c88f87f5ff"
+sass@1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.3.2.tgz"
