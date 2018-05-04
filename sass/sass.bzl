@@ -126,11 +126,12 @@ _sass_binary_attrs = {
         default = ""),
     "output_name": attr.string(
         doc = """Name of the output file, including the .css extension.
-        By default, this is based on the `src` attribute: if `styles.scss` is
-        the `src` then the output file is `styles.css.`.
-        You can override this to be any other name.
-        Note that some tooling may assume that the output name is derived from
-        the input name, so use this attribute with caution.""",
+
+By default, this is based on the `src` attribute: if `styles.scss` is
+the `src` then the output file is `styles.css.`.
+You can override this to be any other name.
+Note that some tooling may assume that the output name is derived from
+the input name, so use this attribute with caution.""",
         default = ""),
     "output_style": attr.string(
         doc = "How to style the compiled CSS",
@@ -143,21 +144,25 @@ _sass_binary_attrs = {
     "deps": sass_deps_attr,
     "compiler": attr.label(
         doc = """Choose which Sass compiler binary to use.
-        By default, we use the JavaScript-transpiled version of the
-        dart-sass library, based on https://github.com/sass/dart-sass.
-        This is the compiler flavor under active development by the Sass team.
-        This compiler is convenient for frontend developers since it's released
-        as JavaScript and can run natively in NodeJS without being locally built.
-        However, it is the slowest option. If you have a substantial Sass
-        codebase, consider the two other options for this attribute:
-        1. `@sassc` uses the libsass compiler written in C++.
-           As of 2018, this is the most commonly used compiler.
-           It requires your Bazel setup has a working C++ compilation toolchain.
-           NOTE: future releases of rules_sass may remove this option, if it
-           becomes obsolete or if the maintenance burden is too high.
-        2. Dart Sass runs the new compiler implementation natively in the Dart
-           VM. This option requires a change to the Dart Bazel rules which is
-           not yet available as of May 2018.
+
+By default, we use the JavaScript-transpiled version of the
+dart-sass library, based on https://github.com/sass/dart-sass.
+This is the compiler flavor under active development by the Sass team.
+This compiler is convenient for frontend developers since it's released
+as JavaScript and can run natively in NodeJS without being locally built.
+However, it is the slowest option. If you have a substantial Sass
+codebase, consider the two other options for this attribute:
+
+1. `compiler = "@sassc"` uses the libsass compiler written in C++.
+   As of 2018, this is the most commonly used compiler.
+   It requires your Bazel setup has a working C++ compilation toolchain.
+
+   NOTE: future releases of rules_sass may remove this option, if it
+   becomes obsolete or if the maintenance burden is too high.
+
+2. Dart Sass runs the new compiler implementation natively in the Dart
+   VM. This option requires a change to the Dart Bazel rules which is
+   not yet available as of May 2018.
         """,
         default = Label("//sass"),
         executable = True,

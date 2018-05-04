@@ -17,10 +17,13 @@ These build rules are used for building [Sass][sass] projects with Bazel.
 
 <a name="setup"></a>
 ## Setup
-To  use the Sass rules, add the following to your `WORKSPACE` file to add the
-external repositories for Sass:
+These rules currently support multiple sass compilers. See documentation in
+sass/sass.bzl.
 
+If you use the pure-JavaScript option (the default) then first add this to your
+`WORKSPACE` file:
 ```python
+# To use the JavaScript version of Sass, we need to first install nodejs #
 http_archive(
     name = "build_bazel_rules_nodejs",
     url = "https://github.com/bazelbuild/rules_nodejs/archive/0.8.0.zip",
@@ -29,11 +32,19 @@ http_archive(
 )
 load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories")
 node_repositories(package_json = [])
+```
 
+For any compiler option, to use the Sass rules, add the following to your
+`WORKSPACE` file to add the external repositories for Sass:
+
+```python
 http_archive(
     name = "io_bazel_rules_sass",
-    url = "https://github.com/bazelbuild/rules_sass/archive/0.0.3.zip",
-    strip_prefix = "rules_sass-0.0.3",
+    #
+    # Check for the latest version when you install
+    #
+    url = "https://github.com/bazelbuild/rules_sass/archive/1.3.2.zip",
+    strip_prefix = "rules_sass-1.3.2",
     sha256 = "8fa98e7b48a5837c286a1ea254b5a5c592fced819ee9fe4fdd759768d97be868",
 )
 load("@io_bazel_rules_sass//sass:sass_repositories.bzl", "sass_repositories")
