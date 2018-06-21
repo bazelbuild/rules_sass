@@ -58,8 +58,8 @@ def _run_sass(ctx, input, css_output, map_output):
   args = ctx.actions.args()
 
   # Flags (see https://github.com/sass/dart-sass/blob/master/lib/src/executable/options.dart)
-  args.add(["--style", ctx.attr.output_style], join_with="=")
-  args.add(["--source-map"])
+  args.add_joined(["--style", ctx.attr.output_style], join_with="=")
+  args.add("--source-map")
 
   # Sources for compilation may exist in the source tree, in bazel-bin, or bazel-genfiles.
   for prefix in [".", ctx.var['BINDIR'], ctx.var['GENDIR']]:
@@ -70,7 +70,7 @@ def _run_sass(ctx, input, css_output, map_output):
   # Last arguments are input and output paths
   # Note that the sourcemap is implicitly written to a path the same as the
   # css with the added .map extension.
-  args.add([input.path, css_output.path])
+  args.add_all([input.path, css_output.path])
 
   ctx.actions.run(
       mnemonic = "SassCompiler",

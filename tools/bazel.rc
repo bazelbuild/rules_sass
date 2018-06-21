@@ -1,0 +1,2 @@
+# Disable the deprecated use of "args.add" to align with settings inside Google.
+build --incompatible_disallow_old_style_args_add
