@@ -106,7 +106,7 @@ def _sass_binary_outputs(src, output_name, output_dir):
 
 sass_deps_attr = attr.label_list(
     doc = "sass_library targets to include in the compilation",
-    providers = [SassInfo, DefaultInfo],
+    providers = [SassInfo],
     allow_files = False,
 )
 
