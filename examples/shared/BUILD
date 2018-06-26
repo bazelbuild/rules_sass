@@ -13,3 +13,12 @@ sass_library(
     name = "fonts",
     srcs = ["_fonts.scss"],
 )
+
+# make a :shared target that includes both :colors and :fonts.
+sass_library(
+    name = "shared",
+    srcs = [
+        ":colors",
+        ":fonts",
+    ],
+)

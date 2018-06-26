@@ -49,7 +49,10 @@ def _sass_library_impl(ctx):
   It doesn't execute any actions."""
   transitive_sources = _collect_transitive_sources(
       ctx.files.srcs, ctx.attr.deps)
-  return [SassInfo(transitive_sources=transitive_sources)]
+  return [
+      SassInfo(transitive_sources=transitive_sources),
+      DefaultInfo(files=transitive_sources),
+  ]
 
 def _run_sass(ctx, input, css_output, map_output):
   """run_sass performs an action to compile a single Sass file into CSS."""
@@ -103,7 +106,7 @@ def _sass_binary_outputs(src, output_name, output_dir):
 
 sass_deps_attr = attr.label_list(
     doc = "sass_library targets to include in the compilation",
-    providers = [SassInfo],
+    providers = [SassInfo, DefaultInfo],
     allow_files = False,
 )
 
