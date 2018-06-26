@@ -11,26 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"Tests for Sass bzl definitions"
 
-load(
-    "//sass:sass.bzl",
-    "sass_binary",
-)
-load(
-    "@bazel_tools//tools/build_rules:test_rules.bzl",
-    "success_target",
-    "successful_test",
-    "failure_target",
-    "failed_test",
-    "assert_",
-    "strip_prefix",
-    "expectation_description",
-    "check_results",
-    "load_results",
-    "analysis_results",
-    "rule_test",
-    "file_test",
-)
+load("@bazel_tools//tools/build_rules:test_rules.bzl", "rule_test")
 
 def _sass_binary_test(package):
     rule_test(

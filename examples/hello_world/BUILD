@@ -13,7 +13,7 @@ sass_binary(
 )
 
 sass_binary(
-  name = "hello_world_no_sourcemap",
+    name = "hello_world_no_sourcemap",
     src = "main.scss",
     output_name = "main-no-sourcemap.css",
     sourcemap = False,

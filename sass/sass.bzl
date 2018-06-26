@@ -46,7 +46,15 @@ def _collect_transitive_sources(srcs, deps):
 
 def _sass_library_impl(ctx):
   """sass_library collects all transitive sources for given srcs and deps.
-  It doesn't execute any actions."""
+
+  It doesn't execute any actions.
+
+  Args:
+    ctx: The Bazel build context
+
+  Returns:
+    The sass_library rule.
+  """
   transitive_sources = _collect_transitive_sources(
       ctx.files.srcs, ctx.attr.deps)
   return [SassInfo(transitive_sources=transitive_sources)]
@@ -95,10 +103,20 @@ def _sass_binary_impl(ctx):
   _run_sass(ctx, ctx.file.src, ctx.outputs.css_file, map_file)
   return DefaultInfo(runfiles = ctx.runfiles(files = outputs))
 
-def _sass_binary_outputs(src, output_name, output_dir, sourcemap):
-  """Get map of sass_binary outputs, which includes the generated css file
-  and (optionally) its sourcemap.
-  Note that the arguments to this function are named after attributes on the rule."""
+def _sass_binary_outputs(output_name, output_dir, sourcemap):
+  """Get map of sass_binary outputs, including generated css and sourcemaps.
+
+  Note that the arguments to this function are named after attributes on the rule.
+
+  Args:
+    output_name: The rule's `output_name` attribute
+    output_dir: The rule's `output_dir` attribute
+    sourcemap: The rule's `sourcemap` attribute
+
+  Returns:
+    Outputs for the sass_binary
+  """
+
   output_name = output_name or "%{src}.css"
   css_file = "/".join([p for p in [output_dir, output_name] if p])
 
