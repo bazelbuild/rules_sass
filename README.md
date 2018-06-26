@@ -162,6 +162,7 @@ may have dependencies (`sass_library` rules, see below).
 | `output_dir`    | Output directory, relative to this package                                    |
 | `output_name`   | Output file name, including .css extension. Defaults to `<src_name>.css`      |
 | `output_style`  | [Output style][] for the generated CSS.                                       |
+| `sourcemap`     | Whether to generate sourcemaps for the generated CSS. Defaults to True.       |
 
 [Output style]: http://sass-lang.com/documentation/file.SASS_REFERENCE.html#output_style
 

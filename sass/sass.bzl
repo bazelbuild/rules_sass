@@ -51,7 +51,7 @@ def _sass_library_impl(ctx):
       ctx.files.srcs, ctx.attr.deps)
   return [SassInfo(transitive_sources=transitive_sources)]
 
-def _run_sass(ctx, input, css_output, map_output):
+def _run_sass(ctx, input, css_output, map_output = ""):
   """run_sass performs an action to compile a single Sass file into CSS."""
   # The Sass CLI expects inputs like
   # sass <flags> <input_filename> <output_filename>
@@ -59,7 +59,9 @@ def _run_sass(ctx, input, css_output, map_output):
 
   # Flags (see https://github.com/sass/dart-sass/blob/master/lib/src/executable/options.dart)
   args.add_joined(["--style", ctx.attr.output_style], join_with="=")
-  args.add("--source-map")
+
+  if ctx.attr.sourcemap:
+      args.add("--source-map")
 
   # Sources for compilation may exist in the source tree, in bazel-bin, or bazel-genfiles.
   for prefix in [".", ctx.var['BINDIR'], ctx.var['GENDIR']]:
@@ -78,28 +80,36 @@ def _run_sass(ctx, input, css_output, map_output):
       inputs = [ctx.executable.compiler] +
           list(_collect_transitive_sources([input], ctx.attr.deps)),
       arguments = [args],
-      outputs = [css_output, map_output],
+      outputs = [css_output, map_output] if ctx.attr.sourcemap else [css_output],
   )
 
 def _sass_binary_impl(ctx):
-  _run_sass(ctx, ctx.file.src, ctx.outputs.css_file, ctx.outputs.map_file)
-
   # Make sure the output CSS is available in runfiles if used as a data dep.
-  return DefaultInfo(runfiles = ctx.runfiles(files = [
-      ctx.outputs.css_file,
-      ctx.outputs.map_file,
-  ]))
+  if ctx.attr.sourcemap:
+      map_file = ctx.outputs.map_file
+      outputs = [ctx.outputs.css_file, map_file]
+  else:
+      map_file = ""
+      outputs = [ctx.outputs.css_file]
 
-def _sass_binary_outputs(src, output_name, output_dir):
+  _run_sass(ctx, ctx.file.src, ctx.outputs.css_file, map_file)
+  return DefaultInfo(runfiles = ctx.runfiles(files = outputs))
+
+def _sass_binary_outputs(src, output_name, output_dir, sourcemap):
   """Get map of sass_binary outputs, which includes the generated css file
-  and its sourcemap.
+  and (optionally) its sourcemap.
   Note that the arguments to this function are named after attributes on the rule."""
   output_name = output_name or "%{src}.css"
   css_file = "/".join([p for p in [output_dir, output_name] if p])
-  return {
+
+  outputs = {
       "css_file": css_file,
-      "map_file": "%s.map" % css_file,
   }
+
+  if sourcemap:
+      outputs["map_file"] = "%s.map" % css_file
+
+  return outputs
 
 sass_deps_attr = attr.label_list(
     doc = "sass_library targets to include in the compilation",
@@ -129,6 +139,9 @@ _sass_binary_attrs = {
         mandatory = True,
         single_file = True,
     ),
+    "sourcemap": attr.bool(
+        default = True,
+        doc = "Whether sourcemaps should be emitted."),
     "include_paths": attr.string_list(
         doc = "Additional directories to search when resolving imports"),
     "output_dir": attr.string(

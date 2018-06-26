@@ -11,3 +11,14 @@ sass_binary(
         "//examples/shared:fonts",
     ],
 )
+
+sass_binary(
+  name = "hello_world_no_sourcemap",
+    src = "main.scss",
+    output_name = "main-no-sourcemap.css",
+    sourcemap = False,
+    deps = [
+        "//examples/shared:colors",
+        "//examples/shared:fonts",
+    ],
+)
