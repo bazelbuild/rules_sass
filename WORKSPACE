@@ -3,9 +3,9 @@ workspace(name = "io_bazel_rules_sass")
 # To use the JavaScript version of Sass, we need to first install nodejs
 http_archive(
     name = "build_bazel_rules_nodejs",
-    url = "https://github.com/bazelbuild/rules_nodejs/archive/0.8.0.zip",
-    strip_prefix = "rules_nodejs-0.8.0",
-    sha256 = "4e40dd49ae7668d245c3107645f2a138660fcfd975b9310b91eda13f0c973953",
+    url = "https://github.com/bazelbuild/rules_nodejs/archive/0.10.0.zip",
+    strip_prefix = "rules_nodejs-0.10.0",
+    sha256 = "2f77623311da8b5009b1c7eade12de8e15fa3cd2adf9dfcc9f87cb2082b2211f",
 )
 load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories")
 node_repositories(package_json = [])
