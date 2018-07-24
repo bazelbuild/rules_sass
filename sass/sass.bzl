@@ -13,7 +13,7 @@
 # limitations under the License.
 "Compile Sass files to CSS"
 
-_FILETYPES = [".sass", ".scss", ".svg", ".png", ".gif"]
+_FILETYPES = [".sass", ".scss", ".svg", ".png", ".gif", ".cur"]
 
 # Documentation for switching which compiler is used
 _COMPILER_ATTR_DOC = """Choose which Sass compiler binary to use.
