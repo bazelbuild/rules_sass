@@ -7,7 +7,7 @@ sass_binary(
     name = "hello_world",
     src = "main.scss",
     deps = [
-        "//examples/shared:shared",
+        "//examples/shared",
     ],
 )
 
