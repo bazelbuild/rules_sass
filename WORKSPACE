@@ -37,14 +37,14 @@ skydoc_repositories()
 # Dependencies for bazel formatting and linting #
 #################################################
 
-BAZEL_BUILDTOOLS_VERSION = "82b21607e00913b16fe1c51bec80232d9d6de31c"
+BAZEL_BUILDTOOLS_VERSION = "c39a197f7d35aebb0e0b031d728fb918f73887d6"
 
 # Bazel buildtools repo contains tools for BUILD file formatting ("buildifier") etc.
 http_archive(
     name = "com_github_bazelbuild_buildtools",
     url = "https://github.com/bazelbuild/buildtools/archive/%s.zip" % BAZEL_BUILDTOOLS_VERSION,
     strip_prefix = "buildtools-%s" % BAZEL_BUILDTOOLS_VERSION,
-    sha256 = "edb24c2f9c55b10a820ec74db0564415c0cf553fa55e9fc709a6332fb6685eff",
+    sha256 = "30c8e027d0ed7843651fbe2dbb6338171c963ba1184a7bce802ae4a30e223fd4",
 )
 
 
