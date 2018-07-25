@@ -16,11 +16,11 @@
 load("@build_bazel_rules_nodejs//:defs.bzl", "yarn_install")
 
 def sass_repositories():
-  """Set up environment for Sass compiler.
-  """
+    """Set up environment for Sass compiler.
+    """
 
-  yarn_install(
-      name = "build_bazel_rules_sass_compiletime_deps",
-      package_json = "@io_bazel_rules_sass//sass:package.json",
-      yarn_lock = "@io_bazel_rules_sass//sass:yarn.lock",
-  )
+    yarn_install(
+        name = "build_bazel_rules_sass_compiletime_deps",
+        package_json = "@io_bazel_rules_sass//sass:package.json",
+        yarn_lock = "@io_bazel_rules_sass//sass:yarn.lock",
+    )
