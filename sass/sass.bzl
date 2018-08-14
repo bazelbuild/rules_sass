@@ -63,7 +63,10 @@ def _sass_library_impl(ctx):
     )
     return [
         SassInfo(transitive_sources = transitive_sources),
-        DefaultInfo(files = transitive_sources),
+        DefaultInfo(
+            files = transitive_sources,
+            runfiles = ctx.runfiles(transitive_files = transitive_sources),
+        ),
     ]
 
 def _run_sass(ctx, input, css_output, map_output = ""):
