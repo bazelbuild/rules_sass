@@ -79,8 +79,8 @@ def _run_sass(ctx, input, css_output, map_output = ""):
     # Flags (see https://github.com/sass/dart-sass/blob/master/lib/src/executable/options.dart)
     args.add_joined(["--style", ctx.attr.output_style], join_with = "=")
 
-    if ctx.attr.sourcemap:
-        args.add("--source-map")
+    if not ctx.attr.sourcemap:
+        args.add("--no-source-map")
 
     # Sources for compilation may exist in the source tree, in bazel-bin, or bazel-genfiles.
     for prefix in [".", ctx.var["BINDIR"], ctx.var["GENDIR"]]:

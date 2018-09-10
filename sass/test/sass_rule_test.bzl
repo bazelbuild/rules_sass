@@ -13,13 +13,26 @@
 # limitations under the License.
 "Tests for Sass bzl definitions"
 
-load("@bazel_tools//tools/build_rules:test_rules.bzl", "rule_test")
+load("@bazel_tools//tools/build_rules:test_rules.bzl", "rule_test", "file_test")
 
 def _sass_binary_test(package):
     rule_test(
         name = "hello_world_rule_test",
         generates = ["main.css", "main.css.map"],
         rule = package + "/hello_world:hello_world",
+    )
+
+    rule_test(
+        name = "no_sourcemap_rule_test",
+        generates = ["main-no-sourcemap.css"],
+        rule = package + "/hello_world:hello_world_no_sourcemap",
+    )
+
+    file_test(
+        name = "no_sourcemap_file_test",
+        file = package + "/hello_world:hello_world_no_sourcemap",
+        regexp = r"sourceMappingURL=",
+        matches = 0,
     )
 
     rule_test(
