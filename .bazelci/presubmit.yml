@@ -25,3 +25,6 @@ platforms:
     - "-//sass/docs"
     test_targets:
     - "//..."
+    # file_test is broken on Windows, see
+    # https://github.com/bazelbuild/bazel/issues/6122
+    - "-//sass/test:no_sourcemap_file_test"
