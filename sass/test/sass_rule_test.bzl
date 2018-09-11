@@ -31,7 +31,7 @@ def _sass_binary_test(package):
     file_test(
         name = "no_sourcemap_file_test",
         file = package + "/hello_world:hello_world_no_sourcemap",
-        regexp = r"sourceMappingURL=",
+        regexp = "sourceMappingURL=",
         matches = 0,
     )
 
