@@ -24,6 +24,8 @@ platforms:
     # https://github.com/bazelbuild/skydoc/issues/58
     - "-//sass/docs"
     test_targets:
+    # Escape hyphens on later args
+    - "--"
     - "//..."
     # file_test is broken on Windows, see
     # https://github.com/bazelbuild/bazel/issues/6122
