@@ -13,7 +13,7 @@
 # limitations under the License.
 "Tests for Sass bzl definitions"
 
-load("@bazel_tools//tools/build_rules:test_rules.bzl", "rule_test", "file_test")
+load("@bazel_tools//tools/build_rules:test_rules.bzl", "file_test", "rule_test")
 
 def _sass_binary_test(package):
     rule_test(
