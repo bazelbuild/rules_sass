@@ -30,9 +30,9 @@ node_repositories(package_json = [])
 http_archive(
     name = "io_bazel_rules_sass",
     # Make sure to check for the latest version when you install
-    url = "https://github.com/bazelbuild/rules_sass/archive/1.3.2.zip",
-    strip_prefix = "rules_sass-1.3.2",
-    sha256 = "8fa98e7b48a5837c286a1ea254b5a5c592fced819ee9fe4fdd759768d97be868",
+    url = "https://github.com/bazelbuild/rules_sass/archive/1.13.4.zip",
+    strip_prefix = "rules_sass-1.13.4",
+    sha256 = "5ddde0d3df96978fa537f76e766538c031dee4d29f91a895f4b1345b5e3f9b16",
 )
 load("@io_bazel_rules_sass//sass:sass_repositories.bzl", "sass_repositories")
 sass_repositories()
