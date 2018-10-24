@@ -11,17 +11,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-"Install Sass toolchain dependencies"
-
-load("@build_bazel_rules_nodejs//:defs.bzl", "yarn_install")
-
-def sass_repositories():
-    """Set up environment for Sass compiler.
-    """
-
-    yarn_install(
-        name = "build_bazel_rules_sass_deps",
-        package_json = "@io_bazel_rules_sass//sass:package.json",
-        yarn_lock = "@io_bazel_rules_sass//sass:yarn.lock",
-    )

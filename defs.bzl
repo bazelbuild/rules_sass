@@ -12,16 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"Install Sass toolchain dependencies"
+""" Public API is re-exported here."""
 
-load("@build_bazel_rules_nodejs//:defs.bzl", "yarn_install")
+load("//sass:sass_repositories.bzl", _sass_repositories = "sass_repositories")
+load("//sass:sass.bzl", _sass_library = "sass_library", _sass_binary = "sass_binary")
 
-def sass_repositories():
-    """Set up environment for Sass compiler.
-    """
+sass_repositories = _sass_repositories
 
-    yarn_install(
-        name = "build_bazel_rules_sass_deps",
-        package_json = "@io_bazel_rules_sass//sass:package.json",
-        yarn_lock = "@io_bazel_rules_sass//sass:yarn.lock",
-    )
+sass_library = _sass_library
+sass_binary = _sass_binary

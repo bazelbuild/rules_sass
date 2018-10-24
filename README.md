@@ -17,24 +17,12 @@ To use the Sass rules, add the following to your
 published versions:
 
 ```py
-# To use the JavaScript version of Sass, we need to first install nodejs
-http_archive(
-    name = "build_bazel_rules_nodejs",
-    url = "https://github.com/bazelbuild/rules_nodejs/archive/0.8.0.zip",
-    strip_prefix = "rules_nodejs-0.8.0",
-    sha256 = "4e40dd49ae7668d245c3107645f2a138660fcfd975b9310b91eda13f0c973953",
-)
-load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories")
-node_repositories(package_json = [])
+# Fetch required transitive dependencies
+load("@io_bazel_rules_sass//:package.bzl", "rules_sass_dependencies")
+rules_sass_dependencies()
 
-http_archive(
-    name = "io_bazel_rules_sass",
-    # Make sure to check for the latest version when you install
-    url = "https://github.com/bazelbuild/rules_sass/archive/1.13.4.zip",
-    strip_prefix = "rules_sass-1.13.4",
-    sha256 = "5ddde0d3df96978fa537f76e766538c031dee4d29f91a895f4b1345b5e3f9b16",
-)
-load("@io_bazel_rules_sass//sass:sass_repositories.bzl", "sass_repositories")
+# Fetch required transitive dependencies
+load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
 sass_repositories()
 ```
 
@@ -73,7 +61,7 @@ $example-red: #ff0000;
 ```python
 package(default_visibility = ["//visibility:public"])
 
-load("@io_bazel_rules_sass//sass:sass.bzl", "sass_library")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_library")
 
 sass_library(
     name = "colors",
@@ -108,7 +96,7 @@ html {
 ```py
 package(default_visibility = ["//visibility:public"])
 
-load("@io_bazel_rules_sass//sass:sass.bzl", "sass_binary")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
 
 sass_binary(
     name = "hello_world",

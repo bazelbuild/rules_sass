@@ -11,5 +11,8 @@ exports_files([
 nodejs_binary(
     name = "sass",
     entry_point = "sass/sass.js",
-    node_modules = "@build_bazel_rules_sass_compiletime_deps//:node_modules",
+    install_source_map_support = False,
+    data = [
+        "@build_bazel_rules_sass_deps//sass",
+    ],
 )

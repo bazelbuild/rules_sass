@@ -69,7 +69,7 @@ def _sass_library_impl(ctx):
         ),
     ]
 
-def _run_sass(ctx, input, css_output, map_output = ""):
+def _run_sass(ctx, input, css_output, map_output = None):
     """run_sass performs an action to compile a single Sass file into CSS."""
 
     # The Sass CLI expects inputs like
@@ -99,7 +99,7 @@ def _run_sass(ctx, input, css_output, map_output = ""):
         inputs = [ctx.executable.compiler] +
                  list(_collect_transitive_sources([input], ctx.attr.deps)),
         arguments = [args],
-        outputs = [css_output, map_output] if ctx.attr.sourcemap else [css_output],
+        outputs = [css_output, map_output] if map_output else [css_output],
     )
 
 def _sass_binary_impl(ctx):
@@ -108,7 +108,7 @@ def _sass_binary_impl(ctx):
         map_file = ctx.outputs.map_file
         outputs = [ctx.outputs.css_file, map_file]
     else:
-        map_file = ""
+        map_file = None
         outputs = [ctx.outputs.css_file]
 
     _run_sass(ctx, ctx.file.src, ctx.outputs.css_file, map_file)
