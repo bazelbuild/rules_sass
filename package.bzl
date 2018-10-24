@@ -14,11 +14,15 @@
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-"""Fetches transitive dependencies required for using the SaSS rules"""
+"""Fetches transitive dependencies required for using the Sass rules"""
+
+def _include_if_not_defined(repo_rule, name, **kwargs):
+    if name not in native.existing_rules():
+        repo_rule(name = name, **kwargs)
 
 def rules_sass_dependencies():
-    # Since we use the Dart version of SaSS, we need to be able to run NodeJS binaries.
-    _maybe(
+    # Since we use the Dart version of Sass, we need to be able to run NodeJS binaries.
+    _include_if_not_defined(
         http_archive,
         name = "build_bazel_rules_nodejs",
         url = "https://github.com/bazelbuild/rules_nodejs/archive/0.15.3.zip",
@@ -26,10 +30,11 @@ def rules_sass_dependencies():
         sha256 = "05afbbc13b0b7d5056e412d66c98853978bd46a94bc8e7b71c7fba4349b77eef",
     )
 
-    # Dependencies from the NodeJS rules. We cannot use the "package.bzl" dependency macro
-    # here because we just want to fetch dependencies instead of loading them. Loading them here
-    # would mean that
-    _maybe(
+    # Dependencies from the NodeJS rules. We don't want to use the "package.bzl" dependency macro
+    # of the NodeJS rules here because we just want to fetch dependencies and not load from them.
+    # Loading the transitive dependencies here would mean that developers have no possibility
+    # to overwrite individual transitive dependencies after `rule_sass_dependencies` ran.
+    _include_if_not_defined(
         http_archive,
         name = "bazel_skylib",
         url = "https://github.com/bazelbuild/bazel-skylib/archive/0.5.0.zip",
@@ -41,7 +46,7 @@ def rules_sass_dependencies():
 
 def rules_sass_dev_dependencies():
     # Dependency for running Skylint.
-    _maybe(
+    _include_if_not_defined(
         http_archive,
         name = "io_bazel",
         sha256 = "978f7e0440dd82182563877e2e0b7c013b26b3368888b57837e9a0ae206fd396",
@@ -50,7 +55,7 @@ def rules_sass_dev_dependencies():
     )
 
     # Required for the Buildtool repository.
-    _maybe(
+    _include_if_not_defined(
         http_archive,
         name = "io_bazel_rules_go",
         urls = ["https://github.com/bazelbuild/rules_go/archive/cbc1e32fba771845305f15e341fa26595d4a136d.zip"],
@@ -59,7 +64,7 @@ def rules_sass_dev_dependencies():
     )
 
     # Bazel buildtools repo contains tools for BUILD file formatting ("buildifier") etc.
-    _maybe(
+    _include_if_not_defined(
         http_archive,
         name = "com_github_bazelbuild_buildtools",
         sha256 = "a82d4b353942b10c1535528b02bff261d020827c9c57e112569eddcb1c93d7f6",
@@ -68,14 +73,10 @@ def rules_sass_dev_dependencies():
     )
 
     # Needed in order to generate documentation
-    _maybe(
+    _include_if_not_defined(
         http_archive,
         name = "io_bazel_skydoc",
         url = "https://github.com/bazelbuild/skydoc/archive/b91215b629c67527a98466e61c11c77530fe85c1.zip",
         strip_prefix = "skydoc-b91215b629c67527a98466e61c11c77530fe85c1",
         sha256 = "3e16df2e6785a241248e6b92c657eb2c40b7a527aa48a1804b9a29806c8d5490",
     )
-
-def _maybe(repo_rule, name, **kwargs):
-    if name not in native.existing_rules():
-        repo_rule(name = name, **kwargs)

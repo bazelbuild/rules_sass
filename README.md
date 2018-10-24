@@ -17,11 +17,20 @@ To use the Sass rules, add the following to your
 published versions:
 
 ```py
-# Fetch required transitive dependencies
+http_archive(
+    name = "io_bazel_rules_sass",
+    # Make sure to check for the latest version when you install
+    url = "https://github.com/bazelbuild/rules_sass/archive/1.14.3.zip",
+    strip_prefix = "rules_sass-1.14.3",
+    sha256 = "058912f6035fe8a61fc602d19cbf95e1ab668a90b2c813ef6ae5dce95458c434",
+)
+
+# Fetch required transitive dependencies. This is an optional step because you
+# can always fetch the required NodeJS transitive dependency on your own.
 load("@io_bazel_rules_sass//:package.bzl", "rules_sass_dependencies")
 rules_sass_dependencies()
 
-# Fetch required transitive dependencies
+# Setup repositories which are needed for the Sass rules.
 load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
 sass_repositories()
 ```
