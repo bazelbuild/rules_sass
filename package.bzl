@@ -76,7 +76,6 @@ def rules_sass_dev_dependencies():
     _include_if_not_defined(
         http_archive,
         name = "io_bazel_skydoc",
-        url = "https://github.com/bazelbuild/skydoc/archive/b91215b629c67527a98466e61c11c77530fe85c1.zip",
-        strip_prefix = "skydoc-b91215b629c67527a98466e61c11c77530fe85c1",
-        sha256 = "3e16df2e6785a241248e6b92c657eb2c40b7a527aa48a1804b9a29806c8d5490",
+        url = "https://github.com/bazelbuild/skydoc/archive/77e5399258f6d91417d23634fce97d73b40cf337.zip",
+        strip_prefix = "skydoc-77e5399258f6d91417d23634fce97d73b40cf337",
     )
