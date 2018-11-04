@@ -100,6 +100,7 @@ def _run_sass(ctx, input, css_output, map_output = None):
                  list(_collect_transitive_sources([input], ctx.attr.deps)),
         arguments = [args],
         outputs = [css_output, map_output] if map_output else [css_output],
+	use_default_shell_env = True,
     )
 
 def _sass_binary_impl(ctx):
