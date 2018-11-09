@@ -15,9 +15,13 @@
 """ Public API is re-exported here."""
 
 load("//sass:sass_repositories.bzl", _sass_repositories = "sass_repositories")
-load("//sass:sass.bzl", _sass_library = "sass_library", _sass_binary = "sass_binary")
+load("//sass:sass.bzl", _sass_library = "sass_library", _sass_binary = "sass_binary", _SassInfo = "SassInfo")
 
 sass_repositories = _sass_repositories
 
 sass_library = _sass_library
 sass_binary = _sass_binary
+
+# Expose the SassInfo provider so that people can make their own custom rules
+# that expose sass library outputs.
+SassInfo = _SassInfo
