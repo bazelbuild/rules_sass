@@ -96,11 +96,11 @@ def _run_sass(ctx, input, css_output, map_output = None):
     ctx.actions.run(
         mnemonic = "SassCompiler",
         executable = ctx.executable.compiler,
-        inputs = [ctx.executable.compiler] +
-                 list(_collect_transitive_sources([input], ctx.attr.deps)),
+        inputs = _collect_transitive_sources([input], ctx.attr.deps),
+        tools = [ctx.executable.compiler],
         arguments = [args],
         outputs = [css_output, map_output] if map_output else [css_output],
-	use_default_shell_env = True,
+        use_default_shell_env = True,
     )
 
 def _sass_binary_impl(ctx):
@@ -160,7 +160,7 @@ sass_library = rule(
         "srcs": attr.label_list(
             doc = "Sass source files",
             allow_files = _FILETYPES,
-            non_empty = True,
+            allow_empty = False,
             mandatory = True,
         ),
         "deps": sass_deps_attr,
@@ -172,9 +172,8 @@ sass_library = rule(
 _sass_binary_attrs = {
     "src": attr.label(
         doc = "Sass entrypoint file",
-        allow_files = _FILETYPES,
         mandatory = True,
-        single_file = True,
+        allow_single_file = _FILETYPES,
     ),
     "sourcemap": attr.bool(
         default = True,

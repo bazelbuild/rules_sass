@@ -13,6 +13,7 @@
 # limitations under the License.
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 """Fetches transitive dependencies required for using the Sass rules"""
 
@@ -25,9 +26,9 @@ def rules_sass_dependencies():
     _include_if_not_defined(
         http_archive,
         name = "build_bazel_rules_nodejs",
-        url = "https://github.com/bazelbuild/rules_nodejs/archive/0.15.3.zip",
-        strip_prefix = "rules_nodejs-0.15.3",
-        sha256 = "05afbbc13b0b7d5056e412d66c98853978bd46a94bc8e7b71c7fba4349b77eef",
+        url = "https://github.com/bazelbuild/rules_nodejs/archive/0.16.2.zip",
+        strip_prefix = "rules_nodejs-0.16.2",
+        sha256 = "9b72bb0aea72d7cbcfc82a01b1e25bf3d85f791e790ddec16c65e2d906382ee0",
     )
 
     # Dependencies from the NodeJS rules. We don't want to use the "package.bzl" dependency macro
@@ -35,11 +36,10 @@ def rules_sass_dependencies():
     # Loading the transitive dependencies here would mean that developers have no possibility
     # to overwrite individual transitive dependencies after `rule_sass_dependencies` ran.
     _include_if_not_defined(
-        http_archive,
+        git_repository,
         name = "bazel_skylib",
-        url = "https://github.com/bazelbuild/bazel-skylib/archive/0.5.0.zip",
-        strip_prefix = "bazel-skylib-0.5.0",
-        sha256 = "ca4e3b8e4da9266c3a9101c8f4704fe2e20eb5625b2a6a7d2d7d45e3dd4efffd",
+        remote = "https://github.com/bazelbuild/bazel-skylib.git",
+        commit = "d7c5518fa061ae18a20d00b14082705d3d2d885d",  # 2018-11-21
     )
 
 """Fetches dependencies which are required **only** for development"""
@@ -58,8 +58,8 @@ def rules_sass_dev_dependencies():
     _include_if_not_defined(
         http_archive,
         name = "io_bazel_rules_go",
-        sha256 = "ee5fe78fe417c685ecb77a0a725dc9f6040ae5beb44a0ba4ddb55453aad23a8a",
-        url = "https://github.com/bazelbuild/rules_go/releases/download/0.16.0/rules_go-0.16.0.tar.gz",
+        sha256 = "f87fa87475ea107b3c69196f39c82b7bbf58fe27c62a338684c20ca17d1d8613",
+        url = "https://github.com/bazelbuild/rules_go/releases/download/0.16.2/rules_go-0.16.2.tar.gz",
     )
 
     # Bazel buildtools repo contains tools for BUILD file formatting ("buildifier") etc.
@@ -75,6 +75,6 @@ def rules_sass_dev_dependencies():
     _include_if_not_defined(
         http_archive,
         name = "io_bazel_skydoc",
-        url = "https://github.com/bazelbuild/skydoc/archive/77e5399258f6d91417d23634fce97d73b40cf337.zip",
-        strip_prefix = "skydoc-77e5399258f6d91417d23634fce97d73b40cf337",
+        url = "https://github.com/bazelbuild/skydoc/archive/9bbdf62c03b5c3fed231604f78d3976f47753d79.zip",  # 2018-11-20
+        strip_prefix = "skydoc-9bbdf62c03b5c3fed231604f78d3976f47753d79",
     )
