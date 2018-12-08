@@ -61,6 +61,14 @@ def rules_sass_dev_dependencies():
         url = "https://github.com/bazelbuild/rules_go/releases/download/0.16.5/rules_go-0.16.5.tar.gz",
     )
 
+    # Required for the Gazelle BUILD file generator
+    _include_if_not_defined(
+        git_repository,
+        name = "bazel_gazelle",
+        commit = "cdc77d08956c8f4b9a0509878cda3b9ce9e02095",
+        remote = "https://github.com/bazelbuild/bazel-gazelle",
+    )
+
     # Bazel buildtools repo contains tools for BUILD file formatting ("buildifier") etc.
     _include_if_not_defined(
         http_archive,

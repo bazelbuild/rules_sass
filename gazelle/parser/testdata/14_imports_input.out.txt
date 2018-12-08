@@ -1,0 +1,45 @@
+<At "<Ident \"import\">">
+<WhiteSpace " ">
+<String "a.scss">
+<Semicolon>
+<WhiteSpace "\n\n">
+<Ident "foo">
+<WhiteSpace " ">
+<LeftCurlyBracket>
+<WhiteSpace "\n  ">
+<Ident "blah">
+<Colon>
+<WhiteSpace " ">
+<Ident "blah">
+<Semicolon>
+<WhiteSpace "\n  ">
+<Ident "goo">
+<WhiteSpace " ">
+<LeftCurlyBracket>
+<WhiteSpace "\n    ">
+<Ident "blee">
+<Colon>
+<WhiteSpace " ">
+<Ident "blee">
+<Semicolon>
+<WhiteSpace "\n    ">
+<At "<Ident \"import\">">
+<WhiteSpace " ">
+<String "../14_imports/b.scss">
+<Semicolon>
+<WhiteSpace "\n    ">
+<Ident "hello">
+<Colon>
+<WhiteSpace " ">
+<Ident "world">
+<Semicolon>
+<WhiteSpace "\n  ">
+<RightCurlyBracket>
+<WhiteSpace "\n  ">
+<At "<Ident \"import\">">
+<WhiteSpace " ">
+<String "sub/c.scss">
+<Semicolon>
+<WhiteSpace "\n">
+<RightCurlyBracket>
+<eof>

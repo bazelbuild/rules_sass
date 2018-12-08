@@ -1,0 +1,15 @@
+/* Comment at the top of the file */
+@import "shared/fonts";
+/* Comment between the imports */
+@import "shared/colors";
+/* Comment after the imports */
+
+html {
+  body {
+    font-family: $default-font-stack;
+    h1 {
+      font-family: $modern-font-stack;
+      color: $example-red;
+    }
+  }
+}

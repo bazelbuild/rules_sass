@@ -1,0 +1,35 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+# gazelle:exclude testdata
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "at.go",
+        "comment.go",
+        "digit.go",
+        "function.go",
+        "hash.go",
+        "ident.go",
+        "string.go",
+        "symbol.go",
+        "tokenizer.go",
+        "whitespace.go",
+    ],
+    importpath = "github.com/bazelbuild/rules_sass/gazelle/parser",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["tokenizer_test.go"],
+    data = [":testdata"],
+    embed = [":go_default_library"],
+    rundir = "gazelle/parser",
+    deps = ["@com_github_google_go_cmp//cmp:go_default_library"],
+)
+
+filegroup(
+    name = "testdata",
+    srcs = glob(["testdata/**"]),
+)

@@ -60,8 +60,8 @@ def _sass_binary_test(package):
 
     rule_test(
         name = "nested_rule_test",
-        generates = ["dir/main.css", "dir/main.css.map"],
-        rule = package + "/nested:nested",
+        generates = ["main.css", "main.css.map"],
+        rule = package + "/nested/dir",
     )
 
 def _multi_sass_binary_test(package):

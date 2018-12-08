@@ -11,3 +11,24 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+load("@bazel_gazelle//:def.bzl", "gazelle", "gazelle_binary", "DEFAULT_LANGUAGES")
+
+# gazelle:prefix github.com/bazelbuild/rules_sass
+gazelle(
+    name = "gazelle",
+    gazelle = ":gazelle_sass",
+)
+
+# In your project you should define your own Gazelle binary. Follow the
+# instructions at
+# https://github.com/bazelbuild/bazel-gazelle/blob/master/extend.rst to add the
+# languages you depend on. You can `bazel run @io_bazel_rules_sass//:gazelle`
+# target in this file if you just need golang, proto and SASS support.
+gazelle_binary(
+    name = "gazelle_sass",
+    languages = DEFAULT_LANGUAGES + [
+        "@io_bazel_rules_sass//gazelle:go_default_library",
+    ],
+    visibility = ["//visibility:private"],
+)

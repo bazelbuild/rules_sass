@@ -1,0 +1,7 @@
+# gazelle:exclude .
+
+filegroup(
+    name = "testdata",
+    srcs = glob(["testdata/**"]),
+    visibility = ["//gazelle:__pkg__"],
+)

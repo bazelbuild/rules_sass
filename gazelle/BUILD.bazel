@@ -1,0 +1,66 @@
+# Copyright 2018 The Bazel Authors. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+load("@bazel_gazelle//:def.bzl", "gazelle_binary")
+
+# Don't have Gazelle generate BUILD files in the testdata directory. It is test
+# data and therefore has strange edge cases that may/may not work.
+# gazelle:exclude testdata
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "config.go",
+        "fileinfo.go",
+        "resolver.go",
+        "sass.go",
+    ],
+    importpath = "github.com/bazelbuild/rules_sass/gazelle",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//gazelle/parser:go_default_library",
+        "@bazel_gazelle//config:go_default_library",
+        "@bazel_gazelle//label:go_default_library",
+        "@bazel_gazelle//language:go_default_library",
+        "@bazel_gazelle//repo:go_default_library",
+        "@bazel_gazelle//resolve:go_default_library",
+        "@bazel_gazelle//rule:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = [
+        "fileinfo_test.go",
+        "gazellebinary_test.go",
+    ],
+    args = ["-gazelle=$(location :gazelle_sass)"],
+    data = [
+        ":gazelle_sass",
+        "//gazelle/testdata",
+    ],
+    embed = [":go_default_library"],
+    importpath = "github.com/bazelbuild/rules_sass/gazelle",
+    rundir = ".",
+    deps = ["@bazel_gazelle//testtools:go_default_library"],
+)
+
+gazelle_binary(
+    name = "gazelle_sass",
+    # keep
+    languages = [
+        "@io_bazel_rules_sass//gazelle:go_default_library",
+    ],
+)

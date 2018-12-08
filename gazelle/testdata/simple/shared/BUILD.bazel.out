@@ -1,0 +1,14 @@
+load("@io_bazel_rules_sass//:defs.bzl", "sass_library")
+
+sass_library(
+    name = "colors",
+    srcs = ["_colors.scss"],
+    visibility = ["//visibility:public"],
+)
+
+sass_library(
+    name = "fonts",
+    srcs = ["_fonts.scss"],
+    visibility = ["//visibility:public"],
+)
+

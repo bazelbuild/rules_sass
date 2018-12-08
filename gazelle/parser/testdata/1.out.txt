@@ -1,0 +1,86 @@
+<Ident "p">
+<WhiteSpace " ">
+<LeftCurlyBracket>
+<WhiteSpace "\n  ">
+<Ident "color">
+<Colon>
+<WhiteSpace " ">
+<Function "adjust-color">
+<Hash "102030">
+<WhiteSpace " ">
+<delim "$">
+<Ident "blue">
+<Colon>
+<WhiteSpace " ">
+<Digit (Integer) 5.000000>
+<RightParenthesis>
+<Semicolon>
+<WhiteSpace "\n  ">
+<Ident "color">
+<Colon>
+<WhiteSpace " ">
+<Function "adjust-color">
+<Hash "102030">
+<WhiteSpace " ">
+<delim "$">
+<Ident "alpha">
+<Colon>
+<WhiteSpace " ">
+<Digit (Number) 0.325000>
+<RightParenthesis>
+<Semicolon>
+<WhiteSpace "\n  ">
+<Ident "color">
+<Colon>
+<WhiteSpace " ">
+<Function "adjust-color">
+<Hash "102030">
+<WhiteSpace " ">
+<delim "$">
+<Ident "red">
+<Colon>
+<WhiteSpace " ">
+<Digit (Integer) -5.000000>
+<Comma>
+<WhiteSpace " ">
+<delim "$">
+<Ident "blue">
+<Colon>
+<WhiteSpace " ">
+<Digit (Integer) 5.000000>
+<RightParenthesis>
+<Semicolon>
+<WhiteSpace "\n  ">
+<Ident "color">
+<Colon>
+<WhiteSpace " ">
+<Function "adjust-color">
+<Function "hsl">
+<Digit (Integer) 25.000000>
+<Comma>
+<WhiteSpace " ">
+<Percentage 100.000000>
+<Comma>
+<WhiteSpace " ">
+<Percentage 80.000000>
+<RightParenthesis>
+<Comma>
+<WhiteSpace " ">
+<delim "$">
+<Ident "lightness">
+<Colon>
+<WhiteSpace " ">
+<Percentage -30.000000>
+<Comma>
+<WhiteSpace " ">
+<delim "$">
+<Ident "alpha">
+<Colon>
+<WhiteSpace " ">
+<Digit (Number) -0.400000>
+<RightParenthesis>
+<Semicolon>
+<WhiteSpace "\n">
+<RightCurlyBracket>
+<WhiteSpace "\n\n">
+<eof>
