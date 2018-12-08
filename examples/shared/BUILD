@@ -6,19 +6,12 @@ load("//sass:sass.bzl", "sass_library")
 sass_library(
     name = "colors",
     srcs = ["_colors.scss"],
+    visibility = ["//visibility:public"],
 )
 
 # make a :fonts target that any sass_binary rules can depend on.
 sass_library(
     name = "fonts",
     srcs = ["_fonts.scss"],
-)
-
-# make a :shared target that includes both :colors and :fonts.
-sass_library(
-    name = "shared",
-    srcs = [
-        ":colors",
-        ":fonts",
-    ],
+    visibility = ["//visibility:public"],
 )
