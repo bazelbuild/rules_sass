@@ -26,9 +26,9 @@ def rules_sass_dependencies():
     _include_if_not_defined(
         http_archive,
         name = "build_bazel_rules_nodejs",
-        url = "https://github.com/bazelbuild/rules_nodejs/archive/0.16.2.zip",
-        strip_prefix = "rules_nodejs-0.16.2",
-        sha256 = "9b72bb0aea72d7cbcfc82a01b1e25bf3d85f791e790ddec16c65e2d906382ee0",
+        url = "https://github.com/bazelbuild/rules_nodejs/archive/0.16.4.zip",
+        strip_prefix = "rules_nodejs-0.16.4",
+        sha256 = "e8704168f9aef4dad828cb8fd39ce0e84c5e8cfa2ab5001b41f2e8b4b04c5147",
     )
 
     # Dependencies from the NodeJS rules. We don't want to use the "package.bzl" dependency macro
@@ -58,8 +58,8 @@ def rules_sass_dev_dependencies():
     _include_if_not_defined(
         http_archive,
         name = "io_bazel_rules_go",
-        sha256 = "f87fa87475ea107b3c69196f39c82b7bbf58fe27c62a338684c20ca17d1d8613",
-        url = "https://github.com/bazelbuild/rules_go/releases/download/0.16.2/rules_go-0.16.2.tar.gz",
+        sha256 = "7be7dc01f1e0afdba6c8eb2b43d2fa01c743be1b9273ab1eaf6c233df078d705",
+        url = "https://github.com/bazelbuild/rules_go/releases/download/0.16.5/rules_go-0.16.5.tar.gz",
     )
 
     # Bazel buildtools repo contains tools for BUILD file formatting ("buildifier") etc.
@@ -75,6 +75,7 @@ def rules_sass_dev_dependencies():
     _include_if_not_defined(
         http_archive,
         name = "io_bazel_skydoc",
-        url = "https://github.com/bazelbuild/skydoc/archive/9bbdf62c03b5c3fed231604f78d3976f47753d79.zip",  # 2018-11-20
-        strip_prefix = "skydoc-9bbdf62c03b5c3fed231604f78d3976f47753d79",
+        url = "https://github.com/bazelbuild/skydoc/archive/82fdbfe797c6591d8732df0c0389a2b1c3e50992.zip",  # 2018-12-12
+        sha256 = "75fd965a71ca1f0d0406d0d0fb0964d24090146a853f58b432761a1a6c6b47b9",
+        strip_prefix = "skydoc-82fdbfe797c6591d8732df0c0389a2b1c3e50992",
     )
