@@ -33,6 +33,10 @@ rules_sass_dependencies()
 # Setup repositories which are needed for the Sass rules.
 load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
 sass_repositories()
+
+# Setup the NodeJS toolchain
+load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories")
+node_repositories()
 ```
 
 ## Basic Example
