@@ -13,7 +13,7 @@
 # limitations under the License.
 "Compile Sass files to CSS"
 
-_FILETYPES = [".sass", ".scss", ".svg", ".png", ".gif", ".cur", ".jpg", ".webp"]
+_ALLOWED_SRC_FILE_EXTENSIONS = [".sass", ".scss", ".svg", ".png", ".gif", ".cur", ".jpg", ".webp"]
 
 # Documentation for switching which compiler is used
 _COMPILER_ATTR_DOC = """Choose which Sass compiler binary to use.
@@ -159,7 +159,7 @@ sass_library = rule(
     attrs = {
         "srcs": attr.label_list(
             doc = "Sass source files",
-            allow_files = _FILETYPES,
+            allow_files = _ALLOWED_SRC_FILE_EXTENSIONS,
             allow_empty = False,
             mandatory = True,
         ),
@@ -173,7 +173,7 @@ _sass_binary_attrs = {
     "src": attr.label(
         doc = "Sass entrypoint file",
         mandatory = True,
-        allow_single_file = _FILETYPES,
+        allow_single_file = _ALLOWED_SRC_FILE_EXTENSIONS,
     ),
     "sourcemap": attr.bool(
         default = True,
@@ -217,4 +217,89 @@ sass_binary = rule(
     implementation = _sass_binary_impl,
     attrs = _sass_binary_attrs,
     outputs = _sass_binary_outputs,
+)
+
+def _multi_sass_binary_impl(ctx):
+  """multi_sass_binary accepts a list of sources and compile all in one pass.
+
+  Args:
+    ctx: The Bazel build context
+
+  Returns:
+    The multi_sass_binary rule.
+  """
+
+  inputs = depset([f for t in ctx.attr.srcs for f in t.files])
+  outputs = []
+  # Every non-partial Sass file will produce one CSS output file and,
+  # optionally, one sourcemap file.
+  for f in inputs:
+    # Sass partial files (prefixed with an underscore) do not produce any
+    # outputs.
+    if f.basename.startswith("_"):
+      continue
+    name = _strip_extension(f.basename)
+    outputs.append(ctx.actions.declare_file(
+      name + ".css",
+      sibling = f,
+    ))
+    if ctx.attr.sourcemap:
+      outputs.append(ctx.actions.declare_file(
+        name + ".css.map",
+        sibling = f,
+      ))
+
+  # Use the package directory as the compilation root given to the Sass compiler
+  root_dir = ctx.label.package
+
+  # Declare arguments passed through to the Sass compiler.
+  # Start with flags and then expected program arguments.
+  args = ctx.actions.args()
+  args.add("--style", ctx.attr.output_style)
+  args.add("--load-path", root_dir)
+
+  if not ctx.attr.sourcemap:
+    args.add("--no-source-map")
+
+  args.add(root_dir + ":" + ctx.bin_dir.path + '/' + root_dir)
+
+  ctx.actions.run(
+    inputs = inputs,
+    outputs = outputs,
+    executable = ctx.executable.compiler,
+    arguments = [args],
+    mnemonic = "SassCompiler",
+    progress_message = "Compiling Sass",
+  )
+
+  return [DefaultInfo(files = depset(outputs))]
+
+multi_sass_binary = rule(
+  implementation = _multi_sass_binary_impl,
+  attrs = {
+    "srcs": attr.label_list(
+      doc = "A list of Sass files and associated assets to compile",
+      allow_files = _ALLOWED_SRC_FILE_EXTENSIONS,
+      allow_empty = False,
+      mandatory = True,
+    ),
+    "sourcemap": attr.bool(
+      doc = "Whether sourcemaps should be emitted",
+      default = True,
+    ),
+    "output_style": attr.string(
+      doc = "How to style the compiled CSS",
+      default = "compressed",
+      values = [
+        "expanded",
+        "compressed",
+      ],
+    ),
+    "compiler": attr.label(
+      doc = _COMPILER_ATTR_DOC,
+      default = Label("//sass"),
+      executable = True,
+      cfg = "host",
+    ),
+  }
 )

@@ -5,6 +5,7 @@
 ## Rules
 * [sass_binary]()
 * [sass_library]()
+* [multi_sass_binary]()
 
 ## Overview
 These build rules are used for building [Sass][sass] projects with Bazel.
@@ -138,7 +139,7 @@ INFO: Elapsed time: 1.911s, Critical Path: 0.01s
 ### sass_binary
 
 ```py
-sass_binary(name, src, deps=[], output_style="compressed", include_paths=[], output_dir=".", output_name=<src_filename.css>)
+sass_binary(name, src, deps=[], include_paths=[], output_dir=".", output_name=<src_filename.css>, output_style="compressed", sourcemap=True)
 ```
 
 `sass_binary` compiles a single CSS output from a single Sass entry-point file. The entry-point file
@@ -181,3 +182,41 @@ any outputs.
 | `name`    | Unique name for this rule (required)                                                |
 | `srcs`    | Sass files included in this library. Each file should start with an underscore      |
 | `deps`    | Dependencies for the `src`. Each dependency is a `sass_library`                     |
+
+### multi_sass_binary
+
+```py
+multi_sass_binary(name, srcs=[], output_style="compressed", sourcemap=True)
+```
+
+`multi_sass_binary` compiles a list of Sass files and outputs the corresponding
+CSS files and optional sourcemaps. Output is omitted for filenames that start
+with underscore "_".
+
+
+:warning: **WARNING**: This rule does a global compilation, and thus any change in the sources
+will trigger a build for **all** files. It is inefficient. Always prefer
+`sass_binary` and provide strict dependencies for most efficient compilation.
+This rule is also not used internally at Google.
+
+
+#### Output targets
+
+The following pair of files is generated for _each_ file in `srcs`.
+
+| Label              | Description                                                                  |
+|--------------------|------------------------------------------------------------------------------|
+| <filename>.css     | The generated CSS output                                                     |
+| <filename>.css.map | The [source map][] that can be used to debug the Sass source in-browser      |
+
+[source map]: https://developers.google.com/web/tools/chrome-devtools/javascript/source-maps
+
+
+| Attribute       | Description                                                                   |
+|-----------------|-------------------------------------------------------------------------------|
+| `name`          | Unique name for this rule (required)                                          |
+| `srcs`          | A list of Sass files (required).                                              |
+| `output_style`  | [Output style][] for the generated CSS.                                       |
+| `sourcemap`     | Whether to generate sourcemaps for the generated CSS. Defaults to True.       |
+
+[Output style]: http://sass-lang.com/documentation/file.SASS_REFERENCE.html#output_style
