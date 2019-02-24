@@ -23,7 +23,10 @@ import (
 	"testing"
 )
 
-func TestProtoFileInfo(t *testing.T) {
+// TestFileInfo tests that when a FileInfo object is constructed from the
+// provided input of the `sass` parameter, the output contains the correct
+// set of imports.
+func TestFileInfo(t *testing.T) {
 	for _, tc := range []struct {
 		desc, name, sass string
 		want             FileInfo

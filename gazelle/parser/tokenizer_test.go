@@ -9,6 +9,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/bazelbuild/rules_go/go/tools/bazel"
 	"github.com/google/go-cmp/cmp"
 )
 
@@ -617,7 +618,13 @@ func TestScanNumber(t *testing.T) {
 
 func TestLargeInputs(t *testing.T) {
 	found := false
-	if err := filepath.Walk("testdata", func(path string, info os.FileInfo, err error) error {
+
+	testDataDir, err := bazel.Runfile(filepath.Join("gazelle", "parser", "testdata"))
+	if err != nil {
+		t.Fatalf("Error finding runfile gazelle/parser/testdata: %s", err)
+	}
+
+	if err := filepath.Walk(testDataDir, func(path string, info os.FileInfo, err error) error {
 		// Don't parse the root, or directories.
 		if info == nil || info.IsDir() {
 			return nil
