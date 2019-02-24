@@ -16,13 +16,11 @@ limitations under the License.
 package gazelle
 
 import (
-	"bytes"
 	"fmt"
 	"log"
 	"os"
 	"path/filepath"
 	"sort"
-	"strconv"
 
 	"github.com/bazelbuild/rules_sass/gazelle/parser"
 )
@@ -120,31 +118,4 @@ func sassFileInfo(dir, name string) FileInfo {
 	sort.Strings(info.Imports)
 
 	return info
-}
-
-// unquoteSassString takes a string that has a complex quoting around it
-// and returns a string without the complex quoting.
-func unquoteSassString(q []byte) string {
-	// Adjust quotes so that Unquote is happy. We need a double quoted string
-	// without unescaped double quote characters inside.
-	noQuotes := bytes.Split(q[1:len(q)-1], []byte{'"'})
-	if len(noQuotes) != 1 {
-		for i := 0; i < len(noQuotes)-1; i++ {
-			if len(noQuotes[i]) == 0 || noQuotes[i][len(noQuotes[i])-1] != '\\' {
-				noQuotes[i] = append(noQuotes[i], '\\')
-			}
-		}
-		q = append([]byte{'"'}, bytes.Join(noQuotes, []byte{'"'})...)
-		q = append(q, '"')
-	}
-	if q[0] == '\'' {
-		q[0] = '"'
-		q[len(q)-1] = '"'
-	}
-
-	s, err := strconv.Unquote(string(q))
-	if err != nil {
-		log.Panicf("unquoting string literal %s from sass: %v", q, err)
-	}
-	return s
 }
