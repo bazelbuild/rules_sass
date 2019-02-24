@@ -1,4 +1,4 @@
-/* Copyright 2018 The Bazel Authors. All rights reserved.
+/* Copyright 2019 The Bazel Authors. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package gazelle
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -50,42 +51,69 @@ func sassFileInfo(dir, name string) FileInfo {
 
 	s := parser.New(file)
 
-	for t := s.Scan(); t.Type() != "EOF"; t = s.Scan() {
-		importString := ""
-		switch v := t.(type) {
-		case *parser.At:
-			if i, ok := v.Ident.(*parser.Ident); ok {
-				if i.Value == "import" {
-					for {
-						// Consume all whitespace.
-						t = s.Scan()
-						if _, ok := t.(*parser.WhiteSpace); !ok {
-							break
-						}
-					}
-
-					if s, ok := t.(*parser.String); ok {
-						importString = s.Value
-					}
-				}
-			}
-		case *parser.Ident:
-			if v.Value == "import" {
-				for {
-					// Consume all whitespace.
-					t = s.Scan()
-					if _, ok := t.(*parser.WhiteSpace); !ok {
-						break
-					}
-				}
-
-				if s, ok := t.(*parser.String); ok {
-					importString = s.Value
-				}
+	// Abstract the scan so that it doesn't return whitespace.
+	scan := func() parser.Token {
+		for {
+			t := s.Scan()
+			if _, ok := t.(*parser.WhiteSpace); !ok {
+				return t
 			}
 		}
-		if importString != "" {
-			info.Imports = append(info.Imports, importString)
+	}
+
+	// parseError is a convenience wrapper to print to stderr a parse error message
+	// in a standardized format.
+	parseError := func(msg string, args ...interface{}) {
+		// Prepend the file.Name() so we tell the user which file had the parse error.
+		args = append([]interface{}{file.Name()}, args...)
+		fmt.Fprintf(os.Stderr, "%s: "+msg+"\n", args...)
+	}
+
+	for t := scan(); t.Type() != "EOF"; t = scan() {
+		var imports []string
+		switch v := t.(type) {
+		case *parser.At:
+			if i, ok := v.Ident.(*parser.Ident); ok && i.Value == "import" {
+				// import_stmt ::= <At <Ident "import">> <String> (<Comma> <String>)+ <Semicolon>
+				// Scan the next symbol. It should be either a <String>
+				t = scan()
+				if s, ok := t.(*parser.String); ok {
+					imports = append(imports, s.Value)
+				} else {
+					parseError("expected a string but got a %v\n", t.Type())
+					continue
+				}
+
+				// Scan the next symbol. It should be either a <Comma> or a <Semicolon>
+				t = scan()
+
+				// Loop through the next tokens in case the user provided a comma
+				// separated list of files to include.
+				for {
+					if _, ok := t.(*parser.Comma); !ok {
+						break
+					}
+
+					t = scan()
+					if s, ok := t.(*parser.String); ok {
+						imports = append(imports, s.Value)
+					} else {
+						break
+					}
+
+					t = scan()
+				}
+
+				if _, ok := t.(*parser.Semicolon); !ok {
+					// If the last character isn't a semicolon then it isn't a valid
+					// import statement. Don't add it to the list of imports.
+					parseError("imports should end in semicolons\n")
+					continue
+				}
+				if len(imports) > 0 {
+					info.Imports = append(info.Imports, imports...)
+				}
+			}
 		}
 	}
 
@@ -94,9 +122,9 @@ func sassFileInfo(dir, name string) FileInfo {
 	return info
 }
 
-// unquoteSASSString takes a string that has a complex quoting around it
+// unquoteSassString takes a string that has a complex quoting around it
 // and returns a string without the complex quoting.
-func unquoteSASSString(q []byte) string {
+func unquoteSassString(q []byte) string {
 	// Adjust quotes so that Unquote is happy. We need a double quoted string
 	// without unescaped double quote characters inside.
 	noQuotes := bytes.Split(q[1:len(q)-1], []byte{'"'})

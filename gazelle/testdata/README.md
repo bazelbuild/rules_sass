@@ -15,3 +15,11 @@ documentation](https://docs.bazel.build/versions/master/skylark/build-style.html
 "Recursive globs make BUILD files difficult to reason about because they skip
 subdirectories containing BUILD files."
 
+## Skipping tests
+
+If you are only interested in excluding a test suite from the runnable set, you
+can place a `skip` file in the root of that suite and it will be excluded. If
+you wanted to skip the `simple` test case, you would would create a file at
+`gazelle/testdata/simple/skip`. This can be dome with the `touch` command.
+
+NOTE: `skip` files are ignored by the `.gitignore` file.

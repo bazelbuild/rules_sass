@@ -1,4 +1,4 @@
-/* Copyright 2018 The Bazel Authors. All rights reserved.
+/* Copyright 2019 The Bazel Authors. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import (
 	"testing"
 
 	"github.com/bazelbuild/bazel-gazelle/testtools"
+	"github.com/bazelbuild/rules_go/go/tools/bazel"
 )
 
 var (
@@ -64,7 +65,11 @@ func TestMain(m *testing.M) {
 }
 
 func TestTestdata(t *testing.T) {
-	testDataDir := filepath.Join("gazelle", "testdata")
+	testDataDir, err := bazel.Runfile(filepath.Join("gazelle", "testdata"))
+	if err != nil {
+		t.Fatalf("Error finding runfile gazelle/testdata: %s", err)
+	}
+
 	testDataFiles, err := ioutil.ReadDir(testDataDir)
 	if err != nil {
 		t.Fatalf("Error enumerating test modes: %s", err)
@@ -86,8 +91,16 @@ func TestTestdata(t *testing.T) {
 		t.Run(testSuite, func(t *testing.T) {
 			var files []testtools.FileSpec
 			var want []testtools.FileSpec
-			// Walk testSuite.Name() to find all the input files and add them to the files or the expectations
+			// Walk testSuite.Name() to find all the input files and add them to the
+			// files or the expectations
 			testSuitePath := filepath.Join(testDataDir, testSuite)
+
+			// If the suite contains a file named "skip" then skip the suite.
+			_, err = os.Stat(filepath.Join(testSuitePath, "skip"))
+			if !os.IsNotExist(err) {
+				t.Skip()
+			}
+
 			err := filepath.Walk(testSuitePath, func(path string, info os.FileInfo, err error) error {
 				// There is no need to process directories. Skip them.
 				if info.IsDir() {
@@ -127,10 +140,6 @@ func TestTestdata(t *testing.T) {
 
 			dir, cleanup := testtools.CreateFiles(t, files)
 			defer cleanup()
-
-			t.Logf("Dir: %q", dir)
-			t.Logf("Files: %v", files)
-			t.Logf("Want: %v", want)
 
 			if err := runGazelle(dir); err != nil {
 				t.Fatal(err)

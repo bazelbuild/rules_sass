@@ -1,4 +1,4 @@
-/* Copyright 2018 The Bazel Authors. All rights reserved.
+/* Copyright 2019 The Bazel Authors. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -111,7 +111,7 @@ func (s *sasslang) GenerateRules(args language.GenerateArgs) language.GenerateRe
 	for _, file := range files {
 		f := file.Name()
 
-		// Only generate SASS entries for sass files (.scss/.sass)
+		// Only generate Sass entries for sass files (.scss/.sass)
 		if !strings.HasSuffix(f, ".sass") && !strings.HasSuffix(f, ".scss") {
 			continue
 		}
@@ -119,14 +119,14 @@ func (s *sasslang) GenerateRules(args language.GenerateArgs) language.GenerateRe
 		fileInfo := sassFileInfo(args.Dir, f)
 		imports = append(imports, fileInfo.Imports)
 
-		// The primary entrypoint on SASS is a main.scss file.
+		// The primary entrypoint on Sass is a main.scss file.
 		if f == "main.scss" {
 			rule := rule.NewRule("sass_binary", base)
 
 			rule.SetAttr("src", "main.scss")
 			rules = append(rules, rule)
 		} else if strings.HasPrefix(filepath.Base(f), "_") {
-			// Libraries in SASS have filenames that start with _.
+			// Libraries in Sass have filenames that start with _.
 			base = filepath.Base(f)
 
 			rule := rule.NewRule("sass_library", base[1:len(base)-5])

@@ -1,0 +1,12 @@
+/* Multiple import statements on one line. */
+@import "shared/fonts", "shared/colors";
+
+html {
+  body {
+    font-family: $default-font-stack;
+    h1 {
+      font-family: $modern-font-stack;
+      color: $example-red;
+    }
+  }
+}

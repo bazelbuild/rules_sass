@@ -1,4 +1,4 @@
-# Copyright 2018 The Bazel Authors. All rights reserved.
+# Copyright 2019 The Bazel Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -54,7 +54,10 @@ go_test(
     embed = [":go_default_library"],
     importpath = "github.com/bazelbuild/rules_sass/gazelle",
     rundir = ".",
-    deps = ["@bazel_gazelle//testtools:go_default_library"],
+    deps = [
+        "@bazel_gazelle//testtools:go_default_library",
+        "@io_bazel_rules_go//go/tools/bazel:go_default_library",
+    ],
 )
 
 gazelle_binary(

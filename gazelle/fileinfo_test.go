@@ -1,4 +1,4 @@
-/* Copyright 2018 The Bazel Authors. All rights reserved.
+/* Copyright 2019 The Bazel Authors. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,29 +36,29 @@ func TestProtoFileInfo(t *testing.T) {
 		}, {
 			desc: "import single quote",
 			name: "single.sass",
-			sass: `import 'single';`,
+			sass: `@import 'single';`,
 			want: FileInfo{
 				Imports: []string{"single"},
 			},
 		}, {
 			desc: "import double quote",
 			name: "double.sass",
-			sass: `import "double";`,
+			sass: `@import "double";`,
 			want: FileInfo{
 				Imports: []string{"double"},
 			},
 		}, {
 			desc: "import two",
 			name: "two.sass",
-			sass: `import "first";
-import "second";`,
+			sass: `@import "first";
+@import "second";`,
 			want: FileInfo{
 				Imports: []string{"first", "second"},
 			},
 		}, {
 			desc: "import depth",
 			name: "deep.sass",
-			sass: `import "from/internal/package";`,
+			sass: `@import "from/internal/package";`,
 			want: FileInfo{
 				Imports: []string{"from/internal/package"},
 			},
