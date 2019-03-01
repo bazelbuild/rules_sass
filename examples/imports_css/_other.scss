@@ -1,0 +1,7 @@
+// This import will be interpreted as a plain CSS import, because this is a CSS
+// file.
+@import 'nothing';
+
+h1 {
+  color: purple;
+}

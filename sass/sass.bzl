@@ -13,7 +13,7 @@
 # limitations under the License.
 "Compile Sass files to CSS"
 
-_ALLOWED_SRC_FILE_EXTENSIONS = [".sass", ".scss", ".svg", ".png", ".gif", ".cur", ".jpg", ".webp"]
+_ALLOWED_SRC_FILE_EXTENSIONS = [".sass", ".scss", ".css", ".svg", ".png", ".gif", ".cur", ".jpg", ".webp"]
 
 # Documentation for switching which compiler is used
 _COMPILER_ATTR_DOC = """Choose which Sass compiler binary to use.
