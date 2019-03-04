@@ -263,14 +263,15 @@ def _multi_sass_binary_impl(ctx):
 
   args.add(root_dir + ":" + ctx.bin_dir.path + '/' + root_dir)
 
-  ctx.actions.run(
-    inputs = inputs,
-    outputs = outputs,
-    executable = ctx.executable.compiler,
-    arguments = [args],
-    mnemonic = "SassCompiler",
-    progress_message = "Compiling Sass",
-  )
+  if inputs:
+    ctx.actions.run(
+        inputs = inputs,
+        outputs = outputs,
+        executable = ctx.executable.compiler,
+        arguments = [args],
+        mnemonic = "SassCompiler",
+        progress_message = "Compiling Sass",
+    )
 
   return [DefaultInfo(files = depset(outputs))]
 
@@ -280,7 +281,7 @@ multi_sass_binary = rule(
     "srcs": attr.label_list(
       doc = "A list of Sass files and associated assets to compile",
       allow_files = _ALLOWED_SRC_FILE_EXTENSIONS,
-      allow_empty = False,
+      allow_empty = True,
       mandatory = True,
     ),
     "sourcemap": attr.bool(
