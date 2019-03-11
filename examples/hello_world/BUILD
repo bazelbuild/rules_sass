@@ -12,6 +12,16 @@ sass_binary(
 )
 
 sass_binary(
+    name = "hello_world_sourcemap_embed_sources",
+    src = "main.scss",
+    output_name = "main-sourcemap-embed-sources.css",
+    sourcemap_embed_sources = True,
+    deps = [
+        "//examples/shared",
+    ],
+)
+
+sass_binary(
     name = "hello_world_no_sourcemap",
     src = "main.scss",
     output_name = "main-no-sourcemap.css",

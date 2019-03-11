@@ -29,4 +29,6 @@ platforms:
     - "//..."
     # file_test is broken on Windows, see
     # https://github.com/bazelbuild/bazel/issues/6122
+    - "-//sass/test:hello_world_file_test"
+    - "-//sass/test:sourcemap_embed_sources_file_test"
     - "-//sass/test:no_sourcemap_file_test"

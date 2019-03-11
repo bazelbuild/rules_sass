@@ -81,6 +81,8 @@ def _run_sass(ctx, input, css_output, map_output = None):
 
     if not ctx.attr.sourcemap:
         args.add("--no-source-map")
+    elif ctx.attr.sourcemap_embed_sources:
+        args.add("--embed-sources")
 
     # Sources for compilation may exist in the source tree, in bazel-bin, or bazel-genfiles.
     for prefix in [".", ctx.var["BINDIR"], ctx.var["GENDIR"]]:
@@ -177,7 +179,11 @@ _sass_binary_attrs = {
     ),
     "sourcemap": attr.bool(
         default = True,
-        doc = "Whether sourcemaps should be emitted.",
+        doc = "Whether source maps should be emitted.",
+    ),
+    "sourcemap_embed_sources": attr.bool(
+        default = False,
+        doc = "Whether to embed source file contents in source maps.",
     ),
     "include_paths": attr.string_list(
         doc = "Additional directories to search when resolving imports",

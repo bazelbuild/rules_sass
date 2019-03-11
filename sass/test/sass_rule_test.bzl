@@ -22,6 +22,29 @@ def _sass_binary_test(package):
         rule = package + "/hello_world:hello_world",
     )
 
+    file_test(
+        name = "hello_world_file_test",
+        file = package + "/hello_world:main.css.map",
+        regexp = "\"sourcesContent\":",
+        matches = 0,
+    )
+
+    rule_test(
+        name = "sourcemap_embed_sources_rule_test",
+        generates = [
+            "main-sourcemap-embed-sources.css",
+            "main-sourcemap-embed-sources.css.map",
+        ],
+        rule = package + "/hello_world:hello_world_sourcemap_embed_sources",
+    )
+
+    file_test(
+        name = "sourcemap_embed_sources_file_test",
+        file = package + "/hello_world:main-sourcemap-embed-sources.css.map",
+        regexp = "\"sourcesContent\":",
+        matches = 1,
+    )
+
     rule_test(
         name = "no_sourcemap_rule_test",
         generates = ["main-no-sourcemap.css"],
