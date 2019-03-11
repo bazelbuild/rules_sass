@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package gazelle
+package sass
 
 import (
 	"io/ioutil"
@@ -77,14 +77,17 @@ func TestFileInfo(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			got := sassFileInfo(dir, tc.name)
+			got, err := sassFileInfo(dir, tc.name)
+			if err != nil {
+				t.Fatal(err)
+			}
 
-			// Reexpose the fields we care bout for testing.
+			// Clear the fields we don't care about for testing.
 			got = FileInfo{
 				Imports: got.Imports,
 			}
 			if !reflect.DeepEqual(got, tc.want) {
-				t.Errorf("Inequalith.\ngot  %#v;\nwant %#v", got, tc.want)
+				t.Errorf("FileInfo don't match expectations.\ngot  %#v;\nwant %#v", got, tc.want)
 			}
 		})
 	}

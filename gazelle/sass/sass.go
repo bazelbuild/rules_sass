@@ -13,14 +13,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// gazelle provides a minimal implementation of language.Language for
+// This package provides a minimal implementation of language.Language for
 // rules_sass.
-package gazelle
+package sass
 
 import (
 	"fmt"
-	"io/ioutil"
-	"path/filepath"
+	"log"
+	"path"
 	"strings"
 
 	"github.com/bazelbuild/bazel-gazelle/config"
@@ -43,7 +43,7 @@ func NewLanguage() language.Language {
 func (s *sasslang) Kinds() map[string]rule.KindInfo {
 	return map[string]rule.KindInfo{
 		"sass_library": {
-			MatchAny: true,
+			MatchAny: false,
 			NonEmptyAttrs: map[string]bool{
 				"srcs": true,
 			},
@@ -94,29 +94,39 @@ func (s *sasslang) Loads() []rule.LoadInfo {
 // Any non-fatal errors this function encounters should be logged using
 // log.Print.
 func (s *sasslang) GenerateRules(args language.GenerateArgs) language.GenerateResult {
-	files, err := ioutil.ReadDir(args.Dir)
-	if err != nil {
-		panic(err)
-	}
-
 	// base is the last part of the path for this element. For example:
 	// "hello_world" => "hello_world"
 	// "foo/bar" => "bar"
-	base := filepath.Base(args.Rel)
+	base := path.Base(args.Rel)
+	if base == "." {
+		//args.Rel will return an empty string if you're in the root of the repo.
+		//This will then be translated into "." by path.Base which is not a valid
+		//name for a target. Therefore we will use the name of "root" just to have
+		//something that is valid. If the user doesn't want the target to be named
+		// `//:root`, then they can rename it and on the next generation it will
+		// persist the user supplied name.
+		base = "root"
+	}
 
 	rules := []*rule.Rule{}
 	imports := []interface{}{}
 
 	var normalFiles []string
-	for _, file := range files {
-		f := file.Name()
-
+	for _, f := range append(args.RegularFiles, args.GenFiles...) {
 		// Only generate Sass entries for sass files (.scss/.sass)
 		if !strings.HasSuffix(f, ".sass") && !strings.HasSuffix(f, ".scss") {
 			continue
 		}
 
-		fileInfo := sassFileInfo(args.Dir, f)
+		fileInfo, err := sassFileInfo(args.Dir, f)
+		if err != nil {
+			panic(fmt.Sprintf("Fatal error"))
+		}
+
+		for err := range fileInfo.Errors {
+			log.Printf("Error parsing %s: %s\n", fileInfo.Name, err)
+		}
+
 		imports = append(imports, fileInfo.Imports)
 
 		// The primary entrypoint on Sass is a main.scss file.
@@ -125,10 +135,9 @@ func (s *sasslang) GenerateRules(args language.GenerateArgs) language.GenerateRe
 
 			rule.SetAttr("src", "main.scss")
 			rules = append(rules, rule)
-		} else if strings.HasPrefix(filepath.Base(f), "_") {
+		} else if strings.HasPrefix(path.Base(f), "_") {
 			// Libraries in Sass have filenames that start with _.
-			base = filepath.Base(f)
-
+			// For each file in the dir with a leading "_" create a new sass_library
 			rule := rule.NewRule("sass_library", base[1:len(base)-5])
 
 			rule.SetAttr("srcs", []string{base})
@@ -151,10 +160,15 @@ func (s *sasslang) GenerateRules(args language.GenerateArgs) language.GenerateRe
 		rules = append(rules, rule)
 	}
 
-	// For each file in the dir with a leading "_" create a new sass_library
 	return language.GenerateResult{
 		Gen:     rules,
 		Imports: imports,
+		// Empty is a list of rules that cannot be built with the files found in the
+		// directory GenerateRules was asked to process. These will be merged with
+		// existing rules. If ther merged rules are empty, they will be deleted.
+		// In order to keep the BUILD file clean, if no file is included in the
+		// default rule for this directory, then remove it.
+		Empty: []*rule.Rule{rule.NewRule("sass_library", base)},
 	}
 }
 

@@ -3,5 +3,5 @@
 filegroup(
     name = "testdata",
     srcs = glob(["**"]),
-    visibility = ["//gazelle:__pkg__"],
+    visibility = ["//gazelle/sass:__pkg__"],
 )

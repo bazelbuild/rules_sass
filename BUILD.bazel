@@ -28,7 +28,8 @@ gazelle(
 gazelle_binary(
     name = "gazelle_sass",
     languages = DEFAULT_LANGUAGES + [
-        "@io_bazel_rules_sass//gazelle:go_default_library",
+        "@io_bazel_rules_sass//gazelle/sass:go_default_library",
     ],
+    tags = ["renovatebot"],
     visibility = ["//visibility:private"],
 )

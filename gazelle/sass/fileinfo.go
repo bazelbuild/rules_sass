@@ -13,11 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package gazelle
+package sass
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"sort"
@@ -30,12 +29,15 @@ type FileInfo struct {
 	Path, Name string
 
 	Imports []string
+
+	Errors []string
 }
 
 // sassFileInfo takes a dir and file name and parses the .sass file into
 // the constituent components, extracting metadata like the set of
-// imports that it has.
-func sassFileInfo(dir, name string) FileInfo {
+// imports that it has. Returns an error object for all errors, if the error is
+// fatal FileInfo will be nil.
+func sassFileInfo(dir, name string) (FileInfo, error) {
 	info := FileInfo{
 		Path: filepath.Join(dir, name),
 		Name: name,
@@ -43,9 +45,9 @@ func sassFileInfo(dir, name string) FileInfo {
 
 	file, err := os.Open(filepath.Join(dir, name))
 	if err != nil {
-		log.Printf("%s: error reading sass file: %v", info.Path, err)
-		return info
+		return info, err
 	}
+	defer file.Close()
 
 	s := parser.New(file)
 
@@ -64,7 +66,7 @@ func sassFileInfo(dir, name string) FileInfo {
 	parseError := func(msg string, args ...interface{}) {
 		// Prepend the file.Name() so we tell the user which file had the parse error.
 		args = append([]interface{}{file.Name()}, args...)
-		fmt.Fprintf(os.Stderr, "%s: "+msg+"\n", args...)
+		info.Errors = append(info.Errors, fmt.Sprintf("%s: "+msg+"\n", args...))
 	}
 
 	for t := scan(); t.Type() != "EOF"; t = scan() {
@@ -117,5 +119,5 @@ func sassFileInfo(dir, name string) FileInfo {
 
 	sort.Strings(info.Imports)
 
-	return info
+	return info, nil
 }

@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package gazelle
+package sass
 
 import (
 	"flag"
@@ -42,9 +42,6 @@ func runGazelle(dir string) error {
 
 	err := cmd.Run()
 
-	// Flush stdout/stderr since this makes log output show up more often.
-	os.Stdout.Sync()
-	os.Stderr.Sync()
 	return err
 }
 
@@ -102,8 +99,9 @@ func TestTestdata(t *testing.T) {
 			}
 
 			err := filepath.Walk(testSuitePath, func(path string, info os.FileInfo, err error) error {
-				// There is no need to process directories. Skip them.
-				if info.IsDir() {
+				// There is no need to process directories or if the input path is
+				// already an error condition. Skip these cases.
+				if err != nil || info.IsDir() {
 					return nil
 				}
 
@@ -112,14 +110,19 @@ func TestTestdata(t *testing.T) {
 					return fmt.Errorf("Unable to read file %q. Err: %v", path, err)
 				}
 
-				// content is a []byte not a string so it has to be typecast and we can't define the filespec at the beginning.
-				fileSpec := testtools.FileSpec{Path: strings.TrimPrefix(path, testSuitePath), Content: string(content)}
+				// By contract errors can't happen since we are finding the relative
+				// path of a file inside the path that we are walking.
+				relPath, _ := filepath.Rel(testSuitePath, path)
+
+				// content is a []byte not a string so it has to be typecast and we
+				// can't define the filespec at the beginning.
+				fileSpec := testtools.FileSpec{Path: relPath, Content: string(content)}
 
 				if strings.HasSuffix(path, "/BUILD.bazel.in") {
-					fileSpec.Path = strings.TrimSuffix(strings.TrimPrefix(path, testSuitePath), "BUILD.bazel.in") + "BUILD.bazel"
+					fileSpec.Path = strings.TrimSuffix(relPath, ".in")
 					files = append(files, fileSpec)
 				} else if strings.HasSuffix(path, "/BUILD.bazel.out") {
-					fileSpec.Path = strings.TrimSuffix(strings.TrimPrefix(path, testSuitePath), "BUILD.bazel.out") + "BUILD.bazel"
+					fileSpec.Path = strings.TrimSuffix(relPath, ".out")
 					want = append(want, fileSpec)
 				} else {
 					files = append(files, fileSpec)
