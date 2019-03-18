@@ -3,9 +3,9 @@
 # Sass Rules for Bazel
 
 ## Rules
-* [sass_binary]()
-* [sass_library]()
-* [multi_sass_binary]()
+* [sass_binary](#sass_binary)
+* [sass_library](#sass_library)
+* [multi_sass_binary](#multi_sass_binary)
 
 ## Overview
 These build rules are used for building [Sass][sass] projects with Bazel.
