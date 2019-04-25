@@ -235,7 +235,7 @@ def _multi_sass_binary_impl(ctx):
     The multi_sass_binary rule.
   """
 
-  inputs = depset([f for t in ctx.attr.srcs for f in t.files])
+  inputs = ctx.files.srcs
   outputs = []
   # Every non-partial Sass file will produce one CSS output file and,
   # optionally, one sourcemap file.
