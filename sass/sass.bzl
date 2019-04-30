@@ -94,6 +94,8 @@ def _run_sass(ctx, input, css_output, map_output = None):
     # Note that the sourcemap is implicitly written to a path the same as the
     # css with the added .map extension.
     args.add_all([input.path, css_output.path])
+    args.use_param_file("@%s", use_always = True)
+    args.set_param_file_format("multiline")
 
     ctx.actions.run(
         mnemonic = "SassCompiler",
@@ -103,6 +105,7 @@ def _run_sass(ctx, input, css_output, map_output = None):
         arguments = [args],
         outputs = [css_output, map_output] if map_output else [css_output],
         use_default_shell_env = True,
+        execution_requirements = {"supports-workers": "1"},
     )
 
 def _sass_binary_impl(ctx):
@@ -268,6 +271,8 @@ def _multi_sass_binary_impl(ctx):
     args.add("--no-source-map")
 
   args.add(root_dir + ":" + ctx.bin_dir.path + '/' + root_dir)
+  args.use_param_file("@%s", use_always = True)
+  args.set_param_file_format("multiline")
 
   if inputs:
     ctx.actions.run(

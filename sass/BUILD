@@ -10,9 +10,11 @@ exports_files([
 # Executable for the sass_binary rule
 nodejs_binary(
     name = "sass",
-    entry_point = "@build_bazel_rules_sass_deps//:node_modules/sass/sass.js",
+    entry_point = "sass_wrapper",
     install_source_map_support = False,
     data = [
+        ":sass_wrapper.js",
         "@build_bazel_rules_sass_deps//sass",
+        "@build_bazel_rules_sass_deps//@bazel/worker",
     ],
 )
