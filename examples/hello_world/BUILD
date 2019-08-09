@@ -18,7 +18,8 @@ sass_binary(
     output_name = "main-sourcemap-embed-sources.css",
     sourcemap_embed_sources = True,
     deps = [
-        "//examples/shared",
+        "//examples/shared:colors",
+        "//examples/shared:fonts",
     ],
 )
 

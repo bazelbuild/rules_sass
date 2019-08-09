@@ -57,8 +57,21 @@ def rules_sass_dev_dependencies():
     _include_if_not_defined(
         http_archive,
         name = "io_bazel_rules_go",
-        sha256 = "7be7dc01f1e0afdba6c8eb2b43d2fa01c743be1b9273ab1eaf6c233df078d705",
-        url = "https://github.com/bazelbuild/rules_go/releases/download/0.16.5/rules_go-0.16.5.tar.gz",
+        urls = [
+            "https://storage.googleapis.com/bazel-mirror/github.com/bazelbuild/rules_go/releases/download/0.19.1/rules_go-0.19.1.tar.gz",
+            "https://github.com/bazelbuild/rules_go/releases/download/0.19.1/rules_go-0.19.1.tar.gz",
+        ],
+        sha256 = "8df59f11fb697743cbb3f26cfb8750395f30471e9eabde0d174c3aebc7a1cd39",
+    )
+
+    _include_if_not_defined(
+        http_archive,
+        name = "bazel_gazelle",
+        urls = [
+            "https://storage.googleapis.com/bazel-mirror/github.com/bazelbuild/bazel-gazelle/releases/download/0.18.1/bazel-gazelle-0.18.1.tar.gz",
+            "https://github.com/bazelbuild/bazel-gazelle/releases/download/0.18.1/bazel-gazelle-0.18.1.tar.gz",
+        ],
+        sha256 = "be9296bfd64882e3c08e3283c58fcb461fa6dd3c171764fcc4cf322f60615a9b",
     )
 
     # Required for the Gazelle BUILD file generator
@@ -73,9 +86,9 @@ def rules_sass_dev_dependencies():
     _include_if_not_defined(
         http_archive,
         name = "com_github_bazelbuild_buildtools",
-        sha256 = "a82d4b353942b10c1535528b02bff261d020827c9c57e112569eddcb1c93d7f6",
-        strip_prefix = "buildtools-0.17.2",
-        url = "https://github.com/bazelbuild/buildtools/archive/0.17.2.zip",
+        sha256 = "d8440da64ac15eca922ca0e8c6772bbb04eaaf3d2f4de387e5bfdb87cecbe9d2",
+        strip_prefix = "buildtools-0.28.0",
+        url = "https://github.com/bazelbuild/buildtools/archive/0.28.0.zip",
     )
 
     # Needed in order to generate documentation
