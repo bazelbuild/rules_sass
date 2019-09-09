@@ -3,9 +3,9 @@
 
 
 "@bazel/worker@latest":
-  version "0.36.0"
-  resolved "https://registry.yarnpkg.com/@bazel/worker/-/worker-0.36.0.tgz#817f480c3635df9d21422448f1654d0dad879344"
-  integrity sha512-EZVP0bZYmCXd7ZflQhenjyWJC3g/0SP+rpAK+BYKTcpSkSrhXR9KWm8ecwiQPoxCZ+8xTwH3T1xT+KFkVgISkw==
+  version "0.37.0"
+  resolved "https://registry.yarnpkg.com/@bazel/worker/-/worker-0.37.0.tgz#36354ba28389e9e0ebf03ec2a9cbf4e7b02d5cba"
+  integrity sha512-uEXbehz5dcO/LErfjIx0I2nmmiWWeK0pOeMPFYpMx7oiuFxEIF0porTsJL5Y5kTHP5/6U15in04IDWn/QJdQUw==
   dependencies:
     protobufjs "6.8.8"
 
@@ -68,14 +68,14 @@
   integrity sha512-1w52Nyx4Gq47uuu0EVcsHBxZFJgurQ+rTKS3qMHxR1GY2T8c2AJYd6vZoZ9q1rupaDjU0yT+Jc2XTyXkjeMA+Q==
 
 "@types/node@^10.1.0":
-  version "10.14.15"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.14.15.tgz#e8f7729b631be1b02ae130ff0b61f3e018000640"
-  integrity sha512-CBR5avlLcu0YCILJiDIXeU2pTw7UK/NIxfC63m7d7CVamho1qDEzXKkOtEauQRPMy6MI8mLozth+JJkas7HY6g==
+  version "10.14.17"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.14.17.tgz#b96d4dd3e427382482848948041d3754d40fd5ce"
+  integrity sha512-p/sGgiPaathCfOtqu2fx5Mu1bcjuP8ALFg4xpGgNkcin7LwRyzUKniEHBKdcE1RPsenq5JVPIpMTJSygLboygQ==
 
 anymatch@^3.0.1:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/anymatch/-/anymatch-3.0.3.tgz#2fb624fe0e84bccab00afee3d0006ed310f22f09"
-  integrity sha512-c6IvoeBECQlMVuYUjSwimnhmztImpErfxJzWZhIQinIvQWoGOnB0dLIgifbPHQt5heS6mNlaZG16f06H3C8t1g==
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/anymatch/-/anymatch-3.1.0.tgz#e609350e50a9313b472789b2f14ef35808ee14d6"
+  integrity sha512-Ozz7l4ixzI7Oxj2+cw+p0tVUt27BpaJ+1+q1TCeANWxHpvyn2+Un+YamBdfKu0uh8xLodGhoa1v7595NhKDAuA==
   dependencies:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
