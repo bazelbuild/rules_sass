@@ -143,10 +143,10 @@ may have dependencies (`sass_library` rules, see below).
 
 
 #### Implicit output targets
-| Label            | Description                                                                  |
-|------------------|------------------------------------------------------------------------------|
-| **name**.css     | The generated CSS output                                                     |
-| **name**.css.map | The [source map][] that can be used to debug the Sass source in-browser      |
+| Label               | Description                                                               |
+|---------------------|---------------------------------------------------------------------------|
+| **output_name**     | The generated CSS output                                                  |
+| **output_name**.map | The [source map][] that can be used to debug the Sass source in-browser   |
 
 [source map]: https://developers.google.com/web/tools/chrome-devtools/javascript/source-maps
 
