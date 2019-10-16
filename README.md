@@ -167,7 +167,7 @@ may have dependencies (`sass_library` rules, see below).
 ### sass_library
 
 ```py
-sass_library(name, src, deps=[])
+sass_library(name, srcs, deps=[])
 ```
 
 Defines a collection of Sass files that can be depended on by a `sass_binary`. Does not generate
@@ -177,7 +177,7 @@ any outputs.
 |-----------|-------------------------------------------------------------------------------------|
 | `name`    | Unique name for this rule (required)                                                |
 | `srcs`    | Sass files included in this library. Each file should start with an underscore      |
-| `deps`    | Dependencies for the `src`. Each dependency is a `sass_library`                     |
+| `deps`    | Dependencies for the `srcs`. Each dependency is a `sass_library`                    |
 
 ### multi_sass_binary
 
