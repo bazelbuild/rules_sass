@@ -14,7 +14,7 @@
 
 "Install Sass toolchain dependencies"
 
-load("@build_bazel_rules_nodejs//:defs.bzl", "yarn_install", "check_rules_nodejs_version")
+load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install", "check_rules_nodejs_version")
 
 def sass_repositories():
     """Set up environment for Sass compiler.
