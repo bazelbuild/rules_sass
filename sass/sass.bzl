@@ -76,6 +76,13 @@ def _run_sass(ctx, input, css_output, map_output = None):
     # sass <flags> <input_filename> <output_filename>
     args = ctx.actions.args()
 
+    # By default, the CLI of Sass writes the output file even if compilation failures have been
+    # reported. We don't want this behavior in the Bazel action, as writing the actual output
+    # file could let the compilation action appear successful. Instead, if we do not write any
+    # file on error, Bazel will never report the action as successful if an error occurred.
+    # https://sass-lang.com/documentation/cli/dart-sass#error-css
+    args.add("--no-error-css")
+
     # Flags (see https://github.com/sass/dart-sass/blob/master/lib/src/executable/options.dart)
     args.add_joined(["--style", ctx.attr.output_style], join_with = "=")
 
