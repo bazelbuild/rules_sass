@@ -17,7 +17,7 @@ const fs = require('fs');
 const args = process.argv.slice(2);
 if (runAsWorker(args)) {
   debug('Starting Sass compiler persistent worker...');
-  runWorkerLoop(args => sass.run_(args));
+  runWorkerLoop(args => sass.cli_pkg_main_0_(args));
   // Note: intentionally don't process.exit() here, because runWorkerLoop
   // is waiting for async callbacks from node.
 } else {
@@ -32,7 +32,7 @@ if (runAsWorker(args)) {
   // of actual arguments line by line.
   const configFile = args[0].replace(/^@+/, '');
   const configContent = fs.readFileSync(configFile, 'utf8').trim();
-  sass.run_(configContent.split('\n'));
+  sass.cli_pkg_main_0_(configContent.split('\n'));
 }
 
 process.exitCode = 0;
