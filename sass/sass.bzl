@@ -166,17 +166,19 @@ sass_deps_attr = attr.label_list(
     allow_files = False,
 )
 
+_sass_library_attrs = {
+    "srcs": attr.label_list(
+        doc = "Sass source files",
+        allow_files = _ALLOWED_SRC_FILE_EXTENSIONS,
+        allow_empty = False,
+        mandatory = True,
+    ),
+    "deps": sass_deps_attr,
+}
+
 sass_library = rule(
     implementation = _sass_library_impl,
-    attrs = {
-        "srcs": attr.label_list(
-            doc = "Sass source files",
-            allow_files = _ALLOWED_SRC_FILE_EXTENSIONS,
-            allow_empty = False,
-            mandatory = True,
-        ),
-        "deps": sass_deps_attr,
-    },
+    attrs = _sass_library_attrs,
 )
 """Defines a group of Sass include files.
 """
