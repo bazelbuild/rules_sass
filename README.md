@@ -21,9 +21,9 @@ published versions:
 http_archive(
     name = "io_bazel_rules_sass",
     # Make sure to check for the latest version when you install
-    url = "https://github.com/bazelbuild/rules_sass/archive/1.15.2.zip",
-    strip_prefix = "rules_sass-1.15.2",
-    sha256 = "96cedd370d8b87759c8b4a94e6e1c3bef7c17762770215c65864d9fba40f07cf",
+    url = "https://github.com/bazelbuild/rules_sass/archive/1.26.3.zip",
+    strip_prefix = "rules_sass-1.26.3",
+    sha256 = "9dcfba04e4af896626f4760d866f895ea4291bc30bf7287887cefcf4707b6a62",
 )
 
 # Fetch required transitive dependencies. This is an optional step because you
