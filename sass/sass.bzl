@@ -268,7 +268,7 @@ def _multi_sass_binary_impl(ctx):
       ))
 
   # Use the package directory as the compilation root given to the Sass compiler
-  root_dir = ctx.label.package
+  root_dir = (ctx.label.workspace_root + "/" if ctx.label.workspace_root else "") + ctx.label.package
 
   # Declare arguments passed through to the Sass compiler.
   # Start with flags and then expected program arguments.
