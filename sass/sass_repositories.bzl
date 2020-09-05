@@ -22,7 +22,8 @@ def sass_repositories():
 
     # 0.31.1: entry_point attribute of rules_nodejs is now a label
     # 0.32.0: @npm//node_modules/foobar:foobar.js labels changed to @npm//:node_modules/foobar/foobar.js with fix for bazelbuild/rules_nodejs#802.
-    check_rules_nodejs_version("0.32.0")
+    # 2.0.1: run_node exported as part of its external API
+    check_rules_nodejs_version("2.0.1")
 
     yarn_install(
         name = "build_bazel_rules_sass_deps",

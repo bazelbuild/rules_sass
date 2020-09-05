@@ -13,6 +13,8 @@
 # limitations under the License.
 "Compile Sass files to CSS"
 
+load("@build_bazel_rules_nodejs//:providers.bzl", "NodeRuntimeDepsInfo", "run_node")
+
 _ALLOWED_SRC_FILE_EXTENSIONS = [".sass", ".scss", ".css", ".svg", ".png", ".gif", ".cur", ".jpg", ".webp"]
 
 # Documentation for switching which compiler is used
@@ -104,10 +106,11 @@ def _run_sass(ctx, input, css_output, map_output = None):
     args.use_param_file("@%s", use_always = True)
     args.set_param_file_format("multiline")
 
-    ctx.actions.run(
+    run_node(
+        ctx,
         mnemonic = "SassCompiler",
-        executable = ctx.executable.compiler,
-        inputs = _collect_transitive_sources([input], ctx.attr.deps),
+        executable = "compiler",
+        inputs = _collect_transitive_sources([input], ctx.attr.deps).to_list(),
         tools = [ctx.executable.compiler],
         arguments = [args],
         outputs = [css_output, map_output] if map_output else [css_output],
@@ -239,10 +242,8 @@ sass_binary = rule(
 
 def _multi_sass_binary_impl(ctx):
   """multi_sass_binary accepts a list of sources and compile all in one pass.
-
   Args:
     ctx: The Bazel build context
-
   Returns:
     The multi_sass_binary rule.
   """
@@ -268,26 +269,27 @@ def _multi_sass_binary_impl(ctx):
       ))
 
   # Use the package directory as the compilation root given to the Sass compiler
-  root_dir = (ctx.label.workspace_root + "/" if ctx.label.workspace_root else "") + ctx.label.package
+  load_dir = (ctx.label.workspace_root + "/" if ctx.label.workspace_root else "") + ctx.label.package
 
   # Declare arguments passed through to the Sass compiler.
   # Start with flags and then expected program arguments.
   args = ctx.actions.args()
   args.add("--style", ctx.attr.output_style)
-  args.add("--load-path", root_dir)
+  args.add("--load-path", load_dir)
 
   if not ctx.attr.sourcemap:
     args.add("--no-source-map")
 
-  args.add(root_dir + ":" + ctx.bin_dir.path + '/' + root_dir)
+  args.add(load_dir + ":" + ctx.bin_dir.path + '/' + load_dir)
   args.use_param_file("@%s", use_always = True)
   args.set_param_file_format("multiline")
 
   if inputs:
-    ctx.actions.run(
+    run_node(
+        ctx,
         inputs = inputs,
         outputs = outputs,
-        executable = ctx.executable.compiler,
+        executable = "compiler",
         arguments = [args],
         mnemonic = "SassCompiler",
         progress_message = "Compiling Sass",

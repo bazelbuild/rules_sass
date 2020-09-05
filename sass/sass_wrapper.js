@@ -13,11 +13,44 @@
 const {debug, runAsWorker, runWorkerLoop} = require('@bazel/worker');
 const sass = require('sass');
 const fs = require('fs');
+const minimist = require('minimist');
 
 const args = process.argv.slice(2);
 if (runAsWorker(args)) {
   debug('Starting Sass compiler persistent worker...');
-  runWorkerLoop(args => sass.cli_pkg_main_0_(args));
+  runWorkerLoop(args => {
+    const argv = minimist(args);
+    const positionalArgs = argv['_'];
+    const output = positionalArgs[1];
+    const input = positionalArgs[0];
+
+    const sourceMap =
+      typeof argv['source-map'] === 'boolean' ? argv['source-map'] : true;
+    const embedSources =
+      typeof argv['embed-sources'] === 'boolean'
+        ? argv['embed-sources']
+        : false;
+
+    try {
+      const result = sass.renderSync({
+        file: input,
+        outFile: output,
+        includePaths: argv['load-path'],
+        outputStyle: argv['style'],
+        sourceMap,
+        sourceMapContents: embedSources
+      });
+
+      fs.writeFileSync(output, result.css);
+      if (sourceMap) {
+        fs.writeFileSync(output + '.map', result.map);
+      }
+      return true;
+    } catch (e) {
+      console.error(e.message);
+      return false;
+    }
+  });
   // Note: intentionally don't process.exit() here, because runWorkerLoop
   // is waiting for async callbacks from node.
 } else {
