@@ -2,6 +2,6 @@
   "devDependencies": {
     "@bazel/worker": "latest",
     "minimist": "1.2.5",
-    "sass": "1.26.9"
+    "sass": "1.26.10"
   }
 }
