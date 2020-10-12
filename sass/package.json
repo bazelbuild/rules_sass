@@ -1,6 +1,7 @@
 {
   "devDependencies": {
     "@bazel/worker": "latest",
+    "yargs": "~16.0.3",
     "sass": "1.27.0"
   }
 }
