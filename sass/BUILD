@@ -16,4 +16,10 @@ nodejs_binary(
         "@build_bazel_rules_sass_deps//sass",
         "@build_bazel_rules_sass_deps//@bazel/worker",
     ],
+    # Opt-in to the patched require() function like google3 has
+    # rules_nodejs 3.0 will flip the default for this flag which breaks rules_sass users
+    templated_args = [
+        "--nobazel_node_patches",
+        "--bazel_patch_module_resolver",
+    ],
 )
