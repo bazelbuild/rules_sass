@@ -17,7 +17,11 @@ const fs = require('fs');
 const args = process.argv.slice(2);
 if (runAsWorker(args)) {
   debug('Starting Sass compiler persistent worker...');
-  runWorkerLoop(args => sass.cli_pkg_main_0_(args));
+  runWorkerLoop(args =>
+    sass.cli_pkg_main_0_(args)
+        .then(() => true)
+        .catch(() => false)
+  );
   // Note: intentionally don't process.exit() here, because runWorkerLoop
   // is waiting for async callbacks from node.
 } else {
