@@ -227,6 +227,7 @@ the input name, so use this attribute with caution.""",
         doc = _COMPILER_ATTR_DOC,
         default = Label("//sass"),
         executable = True,
+        allow_files = True,
         cfg = "host",
     ),
 }
