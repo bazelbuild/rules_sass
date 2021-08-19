@@ -1,5 +1,6 @@
 package(default_visibility = ["//visibility:public"])
 
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 
 exports_files([
@@ -21,5 +22,17 @@ nodejs_binary(
     templated_args = [
         "--nobazel_node_patches",
         "--bazel_patch_module_resolver",
+    ],
+)
+
+bzl_library(
+    name = "bzl",
+    srcs = [
+        "sass.bzl",
+        "sass_repositories.bzl",
+    ],
+    visibility = ["//:__pkg__"],
+    deps = [
+        "@build_bazel_rules_nodejs//:bzl",
     ],
 )
