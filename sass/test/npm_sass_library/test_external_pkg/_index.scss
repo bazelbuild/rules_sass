@@ -1,0 +1,5 @@
+@use "other_file";
+
+@mixin core-styles() {
+  @include other_file.body-color(red);
+}

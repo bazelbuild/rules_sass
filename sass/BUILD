@@ -5,6 +5,7 @@ load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 exports_files([
     "sass.bzl",
     "sass_repositories.bzl",
+    "npm_sass_library.bzl",
 ])
 
 # Executable for the sass_binary rule

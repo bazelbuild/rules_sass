@@ -7,6 +7,7 @@ skylark_doc(
     srcs = [
         "//sass:sass.bzl",
         "//sass:sass_repositories.bzl",
+        "//sass:npm_sass_library.bzl",
     ],
     format = "html",
     site_root = "/rules_sass",
