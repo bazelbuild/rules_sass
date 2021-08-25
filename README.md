@@ -224,13 +224,18 @@ npm_sass_library(name, deps=[])
 ```
 
 Extracts direct and transitive Sass files from the given list of dependencies. Dependencies are expected to be
-external NPM  package targets. The extracted Sass files will be made available for consumption within `sass_binary`
+external npm package targets. The extracted Sass files will be made available for consumption within `sass_binary`
 or `sass_library`.
+
+**Note**: If an external npm package exposes a `sass_libary` by itself, it is recommended to use this target instead.
+The author of an npm package can provide more fine-grained targets for Sass files, while `npm_sass_library` would
+make all Sass files, including files from transitive dependencies, available for consumption. This can result in
+unnecessary large build graphs slowing down compilation.
 
 | Attribute | Description                                                                         |
 |-----------|-------------------------------------------------------------------------------------|
 | `name`    | Unique name for this rule (required)                                                |
-| `deps`    | External NPM package targets for which Sass files are collected (required)          |
+| `deps`    | External npm package targets for which Sass files are collected (required)          |
 
 **Example:**
 

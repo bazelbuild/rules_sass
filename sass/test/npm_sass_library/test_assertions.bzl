@@ -13,3 +13,17 @@ def npm_sass_library_test():
         regexp = "color:red",
         matches = 1,
     )
+
+    file_test(
+        name = "test_fixture_blue_button_expectation",
+        file = "//sass/test/npm_sass_library:test_fixture.css",
+        regexp = "background:blue",
+        matches = 1,
+    )
+
+    file_test(
+        name = "test_fixture_blue_input_expectation",
+        file = "//sass/test/npm_sass_library:test_fixture.css",
+        regexp = "color:blue",
+        matches = 1,
+    )

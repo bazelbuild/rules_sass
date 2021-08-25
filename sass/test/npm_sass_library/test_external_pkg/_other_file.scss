@@ -1,3 +1,6 @@
+@use 'css_plain.css';
+@use 'sass_syntax';
+
 @mixin body-color($color) {
   body {
     color: $color;

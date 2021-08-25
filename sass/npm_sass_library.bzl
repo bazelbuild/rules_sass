@@ -15,24 +15,31 @@
 load("@build_bazel_rules_nodejs//:providers.bzl", "ExternalNpmPackageInfo")
 load("@io_bazel_rules_sass//sass:sass.bzl", "SassInfo")
 
-def _filter_sass_files(files):
-    """
-    Filters a list of files to only return Sass files (with the `.scss` extension).
-    """
+def _is_sass_file(filename):
+    """Checks whether the specified filename resolves to a file supported by Sass."""
+    if filename.endswith(".scss"):
+        return True
+    elif filename.endswith(".sass"):
+        return True
+    elif filename.endswith(".css"):
+        return True
+    return False
 
-    return [f for f in files if f.short_path.endswith(".scss")]
+def _filter_sass_files(files):
+    """Filters a list of files to only return files which are supported by Sass."""
+    return [f for f in files if _is_sass_file(f.short_path)]
 
 
 def _npm_sass_library_impl(ctx):
     """
-    Rule that extracts Sass sources and its transitive dependencies from a NPM
+    Rule that extracts Sass sources and its transitive dependencies from an npm
     package. The extracted source files are provided with the `SassInfo` provider
     so that they can be consumed directly as dependencies of other Sass libraries
     or Sass binaries.
 
     This rule is helpful when build targets rely on Sass files provided by an external
-    NPM package. In those cases, one wouldn't want to list out all individual source
-    files of the NPM package, but rather glob all needed Sass files from the NPM package.
+    npm package. In those cases, one wouldn't want to list out all individual source
+    files of the npm package, but rather glob all needed Sass files from the npm package.
     """
 
     transitive_sources = []
@@ -47,13 +54,16 @@ def _npm_sass_library_impl(ctx):
 
     # Convert the collected transitive Sass sources to a depset. This is necessary
     # for proper deduping of dependencies. Performance-wise it's not efficient that
-    # we need to unwrap the depset for NPM packages, but this is necessary as otherwise
+    # we need to unwrap the depset for npm packages, but this is necessary as otherwise
     # many unused files would end up being action inputs. This ensures efficient runfile
     # trees and proper sandboxing for targets relying on providers of this rule.
     outputs = depset(transitive = transitive_sources)
 
     return [
-        DefaultInfo(files = outputs),
+        DefaultInfo(
+            files = outputs,
+            runfiles = ctx.runfiles(transitive_files = outputs),
+        ),
         SassInfo(transitive_sources = outputs),
     ]
 
@@ -64,9 +74,9 @@ npm_sass_library = rule(
             allow_files = False,
             mandatory = True,
             providers = [ExternalNpmPackageInfo],
-            doc = "List of NPM package targets for which direct and transitive Sass files are collected."
+            doc = "List of npm package targets for which direct and transitive Sass files are collected."
         ),
     },
 )
-"""Rule that collects Sass files from NPM package targets and exposes them for consumption
+"""Rule that collects Sass files from npm package targets and exposes them for consumption
 within `sass_binary` or `sass_library` targets."""
