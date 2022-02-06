@@ -1,6 +1,8 @@
 {
   "devDependencies": {
-    "@bazel/worker": "5.1.0",
-    "sass": "1.49.7"
+    "@bazel/runfiles": "^5.1.0",
+    "@bazel/worker": "^5.1.0",
+    "sass": "1.49.7",
+    "yargs": "^17.3.1"
   }
 }

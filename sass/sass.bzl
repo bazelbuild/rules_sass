@@ -75,15 +75,13 @@ def _run_sass(ctx, input, css_output, map_output = None):
     # The Sass CLI expects inputs like
     # sass <flags> <input_filename> <output_filename>
     args = ctx.actions.args()
+    args.use_param_file("@%s", use_always = True)
+    args.set_param_file_format("multiline")
 
-    # By default, the CLI of Sass writes the output file even if compilation failures have been
-    # reported. We don't want this behavior in the Bazel action, as writing the actual output
-    # file could let the compilation action appear successful. Instead, if we do not write any
-    # file on error, Bazel will never report the action as successful if an error occurred.
-    # https://sass-lang.com/documentation/cli/dart-sass#error-css
-    args.add("--no-error-css")
+    # Positional arguments are input and output paths
+    args.add_all([input.path, css_output.path])
 
-    # Flags (see https://github.com/sass/dart-sass/blob/master/lib/src/executable/options.dart)
+    # https://sass-lang.com/documentation/js-api/modules#OutputStyle.
     args.add_joined(["--style", ctx.attr.output_style], join_with = "=")
 
     if not ctx.attr.sourcemap:
@@ -91,23 +89,23 @@ def _run_sass(ctx, input, css_output, map_output = None):
     elif ctx.attr.sourcemap_embed_sources:
         args.add("--embed-sources")
 
+    # Support for optional configuration JavaScript files. This allows
+    # users to define custom importers or functions.
+    if ctx.attr.config_file:
+        args.add_all(["--config-file", ctx.file.config_file])
+
     # Sources for compilation may exist in the source tree, in bazel-bin, or bazel-genfiles.
     for prefix in [".", ctx.var["BINDIR"], ctx.var["GENDIR"]]:
         args.add("--load-path=%s/" % prefix)
         for include_path in ctx.attr.include_paths:
             args.add("--load-path=%s/%s" % (prefix, include_path))
 
-    # Last arguments are input and output paths
-    # Note that the sourcemap is implicitly written to a path the same as the
-    # css with the added .map extension.
-    args.add_all([input.path, css_output.path])
-    args.use_param_file("@%s", use_always = True)
-    args.set_param_file_format("multiline")
+    action_inputs = [input] + ctx.files.config_file
 
     ctx.actions.run(
         mnemonic = "SassCompiler",
         executable = ctx.executable.compiler,
-        inputs = _collect_transitive_sources([input], ctx.attr.deps),
+        inputs = _collect_transitive_sources(action_inputs, ctx.attr.deps),
         tools = [ctx.executable.compiler],
         arguments = [args],
         outputs = [css_output, map_output] if map_output else [css_output],
@@ -204,6 +202,16 @@ _sass_binary_attrs = {
         doc = "Output directory, relative to this package.",
         default = "",
     ),
+    "config_file": attr.label(
+        doc = """Path to a JavaScript file that can export Sass compilation options.
+
+          The options need to be exported as `default` export and can be used
+          to define custom importers or functions. More details here:
+
+          https://sass-lang.com/documentation/js-api/interfaces/Options.
+        """,
+        allow_single_file = True,
+    ),
     "output_name": attr.string(
         doc = """Name of the output file, including the .css extension.
 
@@ -228,7 +236,7 @@ the input name, so use this attribute with caution.""",
         default = Label("//sass"),
         executable = True,
         allow_files = True,
-        cfg = "host",
+        cfg = "exec",
     ),
 }
 

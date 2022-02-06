@@ -11,16 +11,19 @@ exports_files([
 # Executable for the sass_binary rule
 nodejs_binary(
     name = "sass",
-    entry_point = "sass_wrapper",
     data = [
-        ":sass_wrapper.js",
-        "@build_bazel_rules_sass_deps//sass",
+        "sass_bazel_main.js",
+        "sass_build.mjs",
+        "sass_deps_helper.mjs",
+        "@build_bazel_rules_sass_deps//@bazel/runfiles",
         "@build_bazel_rules_sass_deps//@bazel/worker",
+        "@build_bazel_rules_sass_deps//sass",
+        "@build_bazel_rules_sass_deps//yargs",
     ],
-    # Opt-in to the patched require() function like google3 has
-    # rules_nodejs 3.0 will flip the default for this flag which breaks rules_sass users
-    templated_args = [
-        "--nobazel_node_patches",
-        "--bazel_patch_module_resolver",
-    ],
+    entry_point = "sass_bazel_main.js",
+    # Disables the Bazel node modules linker. The node module linker is unreliable for the
+    # persistent worker executable, as it would rely on the `node_modules/` folder in the
+    # execroot that can be shared in non-sandbox environments or for persistent workers.
+    # https://docs.bazel.build/versions/main/command-line-reference.html#flag--worker_sandboxing.
+    templated_args = ["---nobazel_run_linker"],
 )

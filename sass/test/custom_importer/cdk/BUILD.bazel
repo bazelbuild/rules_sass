@@ -1,0 +1,7 @@
+load("//:defs.bzl", "sass_library")
+
+sass_library(
+    name = "cdk",
+    srcs = ["_index.scss"],
+    visibility = ["//sass/test/custom_importer:__pkg__"],
+)
