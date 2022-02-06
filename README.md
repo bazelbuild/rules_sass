@@ -26,10 +26,8 @@ http_archive(
     sha256 = "9dcfba04e4af896626f4760d866f895ea4291bc30bf7287887cefcf4707b6a62",
 )
 
-# Fetch required transitive dependencies. This is an optional step because you
-# can always fetch the required NodeJS transitive dependency on your own.
-load("@io_bazel_rules_sass//:package.bzl", "rules_sass_dependencies")
-rules_sass_dependencies()
+# Setup Bazel NodeJS rules.
+# See: https://bazelbuild.github.io/rules_nodejs/install.html.
 
 # Setup repositories which are needed for the Sass rules.
 load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")

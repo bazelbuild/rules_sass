@@ -14,16 +14,10 @@
 
 "Install Sass toolchain dependencies"
 
-load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install", "check_rules_nodejs_version")
+load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
 
 def sass_repositories():
-    """Set up environment for Sass compiler.
-    """
-
-    # 0.31.1: entry_point attribute of rules_nodejs is now a label
-    # 0.32.0: @npm//node_modules/foobar:foobar.js labels changed to @npm//:node_modules/foobar/foobar.js with fix for bazelbuild/rules_nodejs#802.
-    check_rules_nodejs_version("0.32.0")
-
+    """Set up environment for Sass compiler."""
     yarn_install(
         name = "build_bazel_rules_sass_deps",
         package_json = "@io_bazel_rules_sass//sass:package.json",
