@@ -16,12 +16,12 @@
 
 load("//sass:sass_repositories.bzl", _sass_repositories = "sass_repositories")
 load(
-  "//sass:sass.bzl",
-  _SassInfo = "SassInfo",
-  _sass_binary = "sass_binary",
-  _sass_library = "sass_library",
-  _multi_sass_binary = "multi_sass_binary",
+    "//sass:sass.bzl",
+    _SassInfo = "SassInfo",
+    _sass_binary = "sass_binary",
+    _sass_library = "sass_library",
 )
+load("//sass:multi_sass_binary.bzl", _multi_sass_binary = "multi_sass_binary")
 load("//sass:npm_sass_library.bzl", _npm_sass_library = "npm_sass_library")
 
 sass_repositories = _sass_repositories
