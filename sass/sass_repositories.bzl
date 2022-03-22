@@ -16,8 +16,14 @@
 
 load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
 
-def sass_repositories():
-    """Set up environment for Sass compiler."""
+def sass_repositories(yarn_script = None):
+    """Set up environment for Sass compiler.
+
+      Args:
+        yarn_script: Optional path to a Yarn CLI JavaScript file. This can be useful when
+          Yarn is vendored. The Sass rules rely on a `yarn_install` for its depdendencies.
+    """
+
     yarn_install(
         name = "build_bazel_rules_sass_deps",
         package_json = "@io_bazel_rules_sass//sass:package.json",
@@ -26,4 +32,5 @@ def sass_repositories():
         # node_modules folders in the @io_bazel_rules_sass external repository. This is
         # not supported by managed_directories.
         symlink_node_modules = False,
+        yarn = yarn_script,
     )
