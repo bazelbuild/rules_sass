@@ -21,7 +21,7 @@ def sass_repositories(yarn_script = None):
 
       Args:
         yarn_script: Optional path to a Yarn CLI JavaScript file. This can be useful when
-          Yarn is vendored. The Sass rules rely on a `yarn_install` for its depdendencies.
+          Yarn is vendored. The Sass rules rely on a `yarn_install` for its dependencies.
     """
 
     yarn_install(
