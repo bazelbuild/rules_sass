@@ -13,8 +13,8 @@ http_archive(
 # Required for the Buildtool repository.
 http_archive(
     name = "io_bazel_rules_go",
-    sha256 = "7be7dc01f1e0afdba6c8eb2b43d2fa01c743be1b9273ab1eaf6c233df078d705",
-    url = "https://github.com/bazelbuild/rules_go/releases/download/0.16.5/rules_go-0.16.5.tar.gz",
+    sha256 = "5ca614c28bcc6862a3645da2ed8a54b7270e938110ad28985e814484815ae56f",
+    url = "https://github.com/bazelbuild/rules_go/archive/b4292b15a157158fac95069fd988b64c24fa16e3.tar.gz",
 )
 
 # Bazel buildtools repo contains tools for BUILD file formatting ("buildifier") etc.
