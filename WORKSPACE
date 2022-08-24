@@ -13,8 +13,11 @@ http_archive(
 # Required for the Buildtool repository.
 http_archive(
     name = "io_bazel_rules_go",
-    sha256 = "5ca614c28bcc6862a3645da2ed8a54b7270e938110ad28985e814484815ae56f",
-    url = "https://github.com/bazelbuild/rules_go/archive/b4292b15a157158fac95069fd988b64c24fa16e3.tar.gz",
+    sha256 = "16e9fca53ed6bd4ff4ad76facc9b7b651a89db1689a2877d6fd7b82aa824e366",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.34.0/rules_go-v0.34.0.zip",
+        "https://github.com/bazelbuild/rules_go/releases/download/v0.34.0/rules_go-v0.34.0.zip",
+    ],
 )
 
 # Bazel buildtools repo contains tools for BUILD file formatting ("buildifier") etc.
@@ -64,11 +67,11 @@ sass_repositories()
 # Required dependencies for docs generation
 #############################################
 
-load("@io_bazel_rules_go//go:def.bzl", "go_register_toolchains", "go_rules_dependencies")
+load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
 
 go_rules_dependencies()
 
-go_register_toolchains()
+go_register_toolchains(version = "1.18.4")
 
 load("@io_bazel_skydoc//skylark:skylark.bzl", "skydoc_repositories")
 
