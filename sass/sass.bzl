@@ -125,7 +125,14 @@ def _sass_binary_impl(ctx):
         outputs = [ctx.outputs.css_file]
 
     _run_sass(ctx, ctx.file.src, ctx.outputs.css_file, map_file)
-    return DefaultInfo(runfiles = ctx.runfiles(files = outputs))
+    transitive_sources = _collect_transitive_sources(
+        [ctx.file.src],
+        ctx.attr.deps,
+    )
+    return [
+        SassInfo(transitive_sources = transitive_sources),
+        DefaultInfo(runfiles = ctx.runfiles(files = outputs)),
+    ]
 
 def _sass_binary_outputs(src, output_name, output_dir, sourcemap):
     """Get map of sass_binary outputs, including generated css and sourcemaps.
