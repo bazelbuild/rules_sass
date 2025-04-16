@@ -1,6 +1,9 @@
-[![Build status](https://badge.buildkite.com/accb37a80d88e0ffda97f55451d05eea2004ed8bbb80a27958.svg)](https://buildkite.com/bazel/rules-sass-postsubmit)
+> [!IMPORTANT]
+> rules_sass has been deprecated, all maintenance and support has ceased.
+> 
+> Please use [gzgz_rules_sass](https://github.com/GZGavinZhao/gzgz_rules_sass) as a drop-in replacement
 
-# Sass Rules for Bazel
+# (**Deprecated**) Sass Rules for Bazel
 
 ## Rules
 * [sass_binary](#sass_binary)
